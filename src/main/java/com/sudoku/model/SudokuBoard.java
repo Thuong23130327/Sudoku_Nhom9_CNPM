@@ -40,6 +40,14 @@ public class SudokuBoard {
     public void setFixed(int row, int col, boolean fixed) {
         this.isFixed[row][col] = fixed;
     }
-    
+
+    public void setSolutionBoard(int[][] dummySolution) {
+    }
+
+    public int getSolutionValue(int row, int col) {
+        return solutionMatrix[row][col];
+    }
+
+
     // Các bạn phụ trách UC-01, UC-03 sẽ viết thêm logic vào đây
 }
