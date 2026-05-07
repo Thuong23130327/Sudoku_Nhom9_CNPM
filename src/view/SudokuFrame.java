@@ -1,0 +1,323 @@
+package view;
+
+import java.util.List;
+import javax.swing.*;
+import javax.swing.border.MatteBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import model.Individual;
+
+public class SudokuFrame extends JFrame {
+
+    private JTextField[][] cells = new JTextField[9][9];
+
+    private JButton btnSolve, btnGenerate, btnClear;
+    private JButton btnHint;
+
+    private JLabel lblStatus;
+
+    // Lưu ô đang được chọn
+    private int selectedRow = -1;
+    private int selectedCol = -1;
+
+    public SudokuFrame() {
+
+        setTitle("Sudoku");
+
+        setSize(800, 600);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setLayout(new BorderLayout());
+
+        // BÀN CỜ
+        JPanel pnlBoard = new JPanel(new GridLayout(9, 9));
+
+        pnlBoard.setBorder(
+                BorderFactory.createEmptyBorder(
+                        10, 10, 10, 10));
+
+        Font font = new Font("Arial", Font.BOLD, 20);
+
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                cells[i][j] = new JTextField();
+
+                cells[i][j]
+                        .setHorizontalAlignment(JTextField.CENTER);
+
+                cells[i][j].setFont(font);
+
+                // Lưu vị trí ô được click
+                int row = i;
+                int col = j;
+
+                cells[i][j].addMouseListener(new MouseAdapter() {
+
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+
+                        selectedRow = row;
+                        selectedCol = col;
+
+                        highlightSameNumbers();
+                    }
+                });
+
+                // Tạo viền đậm cho khối 3x3
+                int top = (i % 3 == 0) ? 2 : 1;
+                int left = (j % 3 == 0) ? 2 : 1;
+                int bottom = (i == 8) ? 2 : 1;
+                int right = (j == 8) ? 2 : 1;
+
+                cells[i][j].setBorder(
+                        new MatteBorder(
+                                top,
+                                left,
+                                bottom,
+                                right,
+                                Color.BLACK));
+
+                pnlBoard.add(cells[i][j]);
+            }
+        }
+
+        add(pnlBoard, BorderLayout.CENTER);
+
+        // PANEL ĐIỀU KHIỂN
+        JPanel pnlControl = new JPanel();
+
+        btnGenerate = new JButton("Tạo Mới");
+
+        btnClear = new JButton("Tự Nhập / Xóa");
+
+        btnHint = new JButton("HINT");
+
+        btnSolve = new JButton("GIẢI");
+
+        lblStatus = new JLabel("Sẵn sàng!");
+
+        pnlControl.add(btnGenerate);
+        pnlControl.add(btnClear);
+        pnlControl.add(btnHint);
+        pnlControl.add(btnSolve);
+        pnlControl.add(lblStatus);
+
+        add(pnlControl, BorderLayout.SOUTH);
+    }
+
+    // Lấy dữ liệu từ giao diện ra mảng int[][]
+    public int[][] getBoardData() {
+
+        int[][] board = new int[9][9];
+
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                String text = cells[i][j].getText();
+
+                try {
+
+                    board[i][j] =
+                            text.isEmpty()
+                                    ? 0
+                                    : Integer.parseInt(text);
+
+                } catch (NumberFormatException e) {
+
+                    // Nếu nhập chữ thì coi như là 0
+                    board[i][j] = 0;
+                }
+            }
+        }
+
+        return board;
+    }
+
+    // Hiển thị đề bài lên giao diện
+    public void setBoardData(int[][] board) {
+
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                if (board[i][j] != 0) {
+
+                    cells[i][j]
+                            .setText(String.valueOf(board[i][j]));
+
+                    // Số đề bài thì không được sửa
+                    cells[i][j].setEditable(false);
+
+                    cells[i][j].setForeground(Color.BLUE);
+
+                    cells[i][j]
+                            .setBackground(new Color(230, 230, 230));
+
+                } else {
+
+                    cells[i][j].setText("");
+
+                    // Ô trống cho phép nhập
+                    cells[i][j].setEditable(true);
+
+                    cells[i][j].setForeground(Color.BLACK);
+
+                    cells[i][j].setBackground(Color.WHITE);
+                }
+            }
+        }
+    }
+
+    // Cập nhật kết quả từ thuật toán
+    public void updateBoardFromIndividual(Individual ind) {
+
+        // Individual chứa List<Gene>,
+        // mỗi Gene là một hàng
+
+        for (int i = 0; i < 9; i++) {
+
+            List<Integer> rowData =
+                    ind.getGenes().get(i).getNumber();
+
+            for (int j = 0; j < 9; j++) {
+
+                // Chỉ cập nhật các ô editable
+                if (cells[i][j].isEditable()) {
+
+                    cells[i][j]
+                            .setText(String.valueOf(rowData.get(j)));
+                }
+            }
+        }
+    }
+
+    // Xóa board
+    public void clearBoard() {
+
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                cells[i][j].setText("");
+
+                cells[i][j].setEditable(true);
+
+                cells[i][j].setForeground(Color.BLACK);
+
+                cells[i][j].setBackground(Color.WHITE);
+            }
+        }
+    }
+
+    // Update status
+    public void updateStatus(String msg) {
+
+        lblStatus.setText(msg);
+    }
+
+    // Highlight các ô cùng số
+    public void highlightSameNumbers() {
+
+        resetCellColors();
+
+        if (selectedRow == -1 || selectedCol == -1) {
+            return;
+        }
+
+        String value =
+                cells[selectedRow][selectedCol].getText();
+
+        if (value.isEmpty()) {
+            return;
+        }
+
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                if (cells[i][j]
+                        .getText()
+                        .equals(value)) {
+
+                    cells[i][j]
+                            .setBackground(
+                                    new Color(255, 255, 150));
+                }
+            }
+        }
+    }
+
+    // Reset màu ô
+    public void resetCellColors() {
+
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                if (cells[i][j].isEditable()) {
+
+                    cells[i][j]
+                            .setBackground(Color.WHITE);
+
+                } else {
+
+                    cells[i][j]
+                            .setBackground(
+                                    new Color(230, 230, 230));
+                }
+            }
+        }
+    }
+
+    // Set giá trị cho 1 ô
+    public void setCellValue(
+            int row,
+            int col,
+            int value) {
+
+        cells[row][col]
+                .setText(String.valueOf(value));
+
+        cells[row][col]
+                .setForeground(Color.RED);
+
+        cells[row][col]
+                .setEditable(false);
+
+        cells[row][col]
+                .setBackground(
+                        new Color(255, 200, 200));
+    }
+
+    // Getter ô đang chọn
+    public int getSelectedRow() {
+        return selectedRow;
+    }
+
+    public int getSelectedCol() {
+        return selectedCol;
+    }
+
+    // Getter cho các nút
+    public JButton getBtnSolve() {
+        return btnSolve;
+    }
+
+    public JButton getBtnGenerate() {
+        return btnGenerate;
+    }
+
+    public JButton getBtnClear() {
+        return btnClear;
+    }
+
+    public JButton getBtnHint() {
+        return btnHint;
+    }
+}
