@@ -1,5 +1,5 @@
 package com.sudoku.model;
-
+import com.sudoku.model.*;
 /**
  * [UC-03] MODULE KIỂM TRA LOGIC VÀ GIẢI THUẬT
  * Phụ trách: Nguyễn Hoài Thương
@@ -52,7 +52,7 @@ public class SudokuLogic {
         return true;
     }
 
-    private boolean isValidRules(int[][] matrix, int row, int col, int num) {
+    public boolean isValidRules(int[][] matrix, int row, int col, int num) {
         for (int i = 0; i < 9; i++) {
             // Kiểm tra trùng hàng cột
             if (matrix[row][i] == num || matrix[i][col] == num) return false;
