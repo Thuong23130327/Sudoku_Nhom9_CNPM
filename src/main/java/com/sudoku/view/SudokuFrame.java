@@ -203,7 +203,11 @@ public class SudokuFrame extends JFrame {
                     cells[i][j]
                             .setText(String.valueOf(board[i][j]));
 
-                    // Số đề bài thì không được sửa
+                    // =================================================================
+                    // UR-2.4: Hệ thống ngăn chặn việc chỉnh sửa/xóa ô thuộc đề bài gốc
+                    // =================================================================
+
+                    // Con số nằm trong ô thuộc đề bài gốc thì không được phép thay đổi:
                     cells[i][j].setEditable(false);
 
                     cells[i][j].setForeground(Color.BLUE);
