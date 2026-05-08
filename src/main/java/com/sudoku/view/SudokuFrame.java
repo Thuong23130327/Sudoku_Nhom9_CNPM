@@ -212,15 +212,17 @@ public class SudokuFrame extends JFrame {
                             .setBackground(new Color(230, 230, 230));
 
                 } else {
-
+                    // =================================================================
+                    // UR-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
+                    // =================================================================
                     cells[i][j].setText("");
 
-                    // Ô trống cho phép nhập
                     cells[i][j].setEditable(true);
 
                     cells[i][j].setForeground(Color.BLACK);
 
                     cells[i][j].setBackground(Color.WHITE);
+
                 }
             }
         }
