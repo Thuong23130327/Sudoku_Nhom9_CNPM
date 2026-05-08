@@ -53,18 +53,37 @@ public class SudokuFrame extends JFrame {
                 cells[i][j].setFont(font);
 
                 // Lưu vị trí ô được click
-                int row = i;
-                int col = j;
+                final int r = i;
+                final int c = j;
 
+                // ===========================================================================
+                // UR-2.1: Hệ thống phải cho phép người dùng chọn một ô trống trên lưới bằng chuột
+                // ===========================================================================
                 cells[i][j].addMouseListener(new MouseAdapter() {
 
                     @Override
                     public void mouseClicked(MouseEvent e) {
 
-                        selectedRow = row;
-                        selectedCol = col;
-
+                        selectedRow = r;
+                        selectedCol = c;
+                        // Ép ô này nhận Focus để kích hoạt FocusListener
+                        cells[r][c].requestFocusInWindow();
                         highlightSameNumbers();
+                    }
+                });
+                cells[i][j].addFocusListener(new java.awt.event.FocusAdapter() {
+                    public void focusGained(java.awt.event.FocusEvent evt) {
+                        JTextField source = (JTextField)evt.getSource();
+                        source.setBackground(new Color(0, 255, 0)); // Xanh lá cây khi chọn
+                    }
+                    public void focusLost(java.awt.event.FocusEvent evt) {
+                        JTextField source = (JTextField)evt.getSource();
+                        // Trả lại màu cũ tùy theo ô đó là đề bài hay ô trống
+                        if (!source.isEditable()) {
+                            source.setBackground(new Color(230, 230, 230));
+                        } else {
+                            source.setBackground(Color.WHITE);
+                        }
                     }
                 });
 
