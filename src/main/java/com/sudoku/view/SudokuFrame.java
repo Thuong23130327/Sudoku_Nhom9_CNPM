@@ -71,6 +71,7 @@ public class SudokuFrame extends JFrame {
                         highlightSameNumbers();
                     }
                 });
+                //Sự kiện khi người dùng chọn vào 1 ô thì ô đó sẽ hiện lên màu xanh lá cây để nhận biết:
                 cells[i][j].addFocusListener(new java.awt.event.FocusAdapter() {
                     public void focusGained(java.awt.event.FocusEvent evt) {
                         JTextField source = (JTextField)evt.getSource();
@@ -84,6 +85,35 @@ public class SudokuFrame extends JFrame {
                         } else {
                             source.setBackground(Color.WHITE);
                         }
+                    }
+                });
+                // =============================================================
+                // UR-2.2: Hệ thống tiếp nhận giá trị nhập từ bàn phím. Chuyển đổi văn bản nhập vào thành số nguyên từ 1-9.
+                // =============================================================
+                cells[i][j].addKeyListener(new java.awt.event.KeyAdapter() {
+                    @Override
+                    public void keyTyped(java.awt.event.KeyEvent e) {
+                        char charKey = e.getKeyChar();
+
+                        // Chỉ cho phép nhập số 1-9
+                        if (!((charKey >= '1') && (charKey <= '9'))) {
+                            e.consume(); // Chặn ký tự lạ
+                            return;
+                        }
+
+                        // Nếu ô đã có nội dung, ghi đè nội dung mới thay vì nối thêm. Giúp ô Sudoku luôn chỉ có 1 chữ số
+                        if (cells[r][c].getText().length() >= 1) {
+                            cells[r][c].setText("");
+                        }
+                    }
+                });
+                cells[i][j].addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        selectedRow = r; // Dùng r thay vì i
+                        selectedCol = c; // Dùng c thay vì j
+                        cells[r][c].requestFocusInWindow();
+                        highlightSameNumbers();
                     }
                 });
 
@@ -141,12 +171,15 @@ public class SudokuFrame extends JFrame {
                 String text = cells[i][j].getText();
 
                 try {
-
-                    board[i][j] =
-                            text.isEmpty()
-                                    ? 0
-                                    : Integer.parseInt(text);
-
+                    // =============================================================
+                    // UR-2.2: Hệ thống tiếp nhận giá trị nhập từ bàn phím. Chuyển đổi văn bản nhập vào thành số nguyên từ 1-9.
+                    // =============================================================
+                    int value = Integer.parseInt(text);
+                    if (value >= 1 && value <= 9) {
+                        board[i][j] = value;
+                    } else {
+                        board[i][j] = 0; // Không chấp nhận số ngoài khoảng 1-9
+                    }
                 } catch (NumberFormatException e) {
 
                     // Nếu nhập chữ thì coi như là 0
