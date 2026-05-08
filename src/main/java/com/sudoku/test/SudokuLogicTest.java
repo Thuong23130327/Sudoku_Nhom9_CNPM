@@ -1,7 +1,5 @@
 package com.sudoku.test;
-
-import com.sudoku.model.SudokuBoard;
-import com.sudoku.model.SudokuLogic;
+import com.sudoku.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
