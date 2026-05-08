@@ -116,7 +116,22 @@ public class SudokuFrame extends JFrame {
                         highlightSameNumbers();
                     }
                 });
+                // ===========================================================================
+                // UR-2.5: Hệ thống phải hỗ trợ người dùng chuyển đổi giữa các ô bằng các phím mũi tên trên bàn phím.
+                // ===========================================================================
+                cells[i][j].addKeyListener(new java.awt.event.KeyAdapter() {
+                    @Override
+                    public void keyPressed(java.awt.event.KeyEvent e) {
+                        int code = e.getKeyCode();
+                        if (code == java.awt.event.KeyEvent.VK_UP ||
+                                code == java.awt.event.KeyEvent.VK_DOWN ||
+                                code == java.awt.event.KeyEvent.VK_LEFT ||
+                                code == java.awt.event.KeyEvent.VK_RIGHT) {
 
+                            moveFocus(r, c, code);
+                        }
+                    }
+                });
                 // Tạo viền đậm cho khối 3x3
                 int top = (i % 3 == 0) ? 2 : 1;
                 int left = (j % 3 == 0) ? 2 : 1;
@@ -157,6 +172,31 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(lblStatus);
 
         add(pnlControl, BorderLayout.SOUTH);
+    }
+
+    //Hàm xử lý cho phép người chơi dùng phím mũi tên di chuyển giữa các ô
+    public void moveFocus(int currentRow, int currentCol, int keyCode) {
+        int nextR = currentRow;
+        int nextC = currentCol;
+
+        switch (keyCode) {
+            case java.awt.event.KeyEvent.VK_UP:
+                nextR = (currentRow - 1 + 9) % 9; // Lên trên (vòng lại nếu ở biên)
+                break;
+            case java.awt.event.KeyEvent.VK_DOWN:
+                nextR = (currentRow + 1) % 9;     // Xuống dưới
+                break;
+            case java.awt.event.KeyEvent.VK_LEFT:
+                nextC = (currentCol - 1 + 9) % 9; // Sang trái
+                break;
+            case java.awt.event.KeyEvent.VK_RIGHT:
+                nextC = (currentCol + 1) % 9;     // Sang phải
+                break;
+            default:
+                return; // Nếu là phím khác thì không làm gì
+        }
+
+        cells[nextR][nextC].requestFocus(); // Chuyển con trỏ sang ô mới
     }
 
     // Lấy dữ liệu từ giao diện ra mảng int[][]
@@ -299,13 +339,11 @@ public class SudokuFrame extends JFrame {
 
             for (int j = 0; j < 9; j++) {
 
-                if (cells[i][j]
-                        .getText()
-                        .equals(value)) {
+                // Nếu là ô đang focus thì không đè màu vàng lên
+                if (cells[i][j].isFocusOwner()) continue;
 
-                    cells[i][j]
-                            .setBackground(
-                                    new Color(255, 255, 150));
+                if (cells[i][j].getText().equals(value)) {
+                    cells[i][j].setBackground(new Color(255, 255, 150)); // Màu vàng highlight
                 }
             }
         }
@@ -317,19 +355,16 @@ public class SudokuFrame extends JFrame {
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
+                // Nếu ô này đang có focus thì KHÔNG reset màu (để giữ màu xanh)
+                if (cells[i][j].isFocusOwner()) {
+                    continue;
+                }
 
                 if (cells[i][j].isEditable()) {
-
-                    cells[i][j]
-                            .setBackground(Color.WHITE);
-
+                    cells[i][j].setBackground(Color.WHITE);
                 } else {
-
-                    cells[i][j]
-                            .setBackground(
-                                    new Color(230, 230, 230));
-                }
-            }
+                    cells[i][j].setBackground(new Color(230, 230, 230));
+                }            }
         }
     }
 
