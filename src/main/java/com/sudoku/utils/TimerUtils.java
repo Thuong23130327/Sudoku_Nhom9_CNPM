@@ -1,4 +1,4 @@
-package main.java.com.sudoku.utils;
+package com.sudoku.utils;
 
 public class TimerUtils {
     

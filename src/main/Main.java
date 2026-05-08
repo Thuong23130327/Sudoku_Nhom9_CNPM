@@ -1,8 +1,8 @@
 package main;
 
 import javax.swing.SwingUtilities;
-import controller.SudokuController;
-import view.SudokuFrame;
+import com.sudoku.controller.SudokuController;
+import com.sudoku.view.SudokuFrame;
 
 public class Main {
     public static void main(String[] args) {
