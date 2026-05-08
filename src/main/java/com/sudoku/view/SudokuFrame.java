@@ -1,4 +1,4 @@
-package view;
+package com.sudoku.view;
 
 import java.util.List;
 import javax.swing.*;
@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import model.Individual;
+import com.sudoku.model.Individual;
 
 public class SudokuFrame extends JFrame {
 
@@ -220,12 +220,14 @@ public class SudokuFrame extends JFrame {
 
         lblStatus.setText(msg);
     }
-
+    // [UR-4.3]
     // Highlight các ô cùng số
     public void highlightSameNumbers() {
 
+        // Reset màu trước
         resetCellColors();
 
+        // Kiểm tra đã chọn ô chưa
         if (selectedRow == -1 || selectedCol == -1) {
             return;
         }
@@ -233,10 +235,12 @@ public class SudokuFrame extends JFrame {
         String value =
                 cells[selectedRow][selectedCol].getText();
 
+        // Nếu ô trống thì không highlight
         if (value.isEmpty()) {
             return;
         }
 
+        // Highlight các ô cùng số
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
@@ -251,6 +255,11 @@ public class SudokuFrame extends JFrame {
                 }
             }
         }
+
+        // Highlight ô đang chọn đậm hơn
+        cells[selectedRow][selectedCol]
+                .setBackground(
+                        new Color(255, 220, 100));
     }
 
     // Reset màu ô
@@ -289,12 +298,22 @@ public class SudokuFrame extends JFrame {
 
         cells[row][col]
                 .setEditable(false);
-
+        // [UR-4.4]
+        // Highlight trực quan ô được hệ thống tác động
         cells[row][col]
                 .setBackground(
                         new Color(255, 200, 200));
     }
+    // [UR-4.4]
+    // Highlight ô lỗi màu đỏ
+    public void highlightErrorCell(
+            int row,
+            int col) {
 
+        cells[row][col]
+                .setBackground(
+                        new Color(255, 120, 120));
+    }
     // Getter ô đang chọn
     public int getSelectedRow() {
         return selectedRow;
@@ -319,5 +338,11 @@ public class SudokuFrame extends JFrame {
 
     public JButton getBtnHint() {
         return btnHint;
+    }
+    public JTextField getCell(
+            int row,
+            int col) {
+
+        return cells[row][col];
     }
 }

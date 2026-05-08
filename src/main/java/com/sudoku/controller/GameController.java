@@ -1,4 +1,4 @@
-package main.java.com.sudoku.controller;
+package com.sudoku.controller;
 
 public class GameController {
     

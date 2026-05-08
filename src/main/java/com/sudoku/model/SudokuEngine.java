@@ -1,18 +1,18 @@
-package model;
+package com.sudoku.model;
 
 import java.util.function.Consumer;
 
-import model.Individual;
-import model.Population;
+import com.sudoku.model.Individual;
+import com.sudoku.model.Population;
 
 public class SudokuEngine {
     private boolean isRunning = false;
     private int [][] solution;
-   private Consumer<Individual> onGenerationEvolved;
+    private Consumer<Individual> onGenerationEvolved;
 
     public Consumer<Individual> getOnGenerationEvolved() {
-		return onGenerationEvolved;
-	}
+        return onGenerationEvolved;
+    }
 
     public void setOnGenerationEvolved(Consumer<Individual> callback) {
         this.onGenerationEvolved = callback;
@@ -31,9 +31,9 @@ public class SudokuEngine {
 
     public void solve(int[][] initialBoard) {
         isRunning = true;
-        
+
         Population pop = new Population(initialBoard);
-        
+
         int generation = 0;
         int bestFitness = 0;
         int count = 0;

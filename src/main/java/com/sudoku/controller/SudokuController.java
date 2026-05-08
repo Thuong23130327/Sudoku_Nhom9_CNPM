@@ -1,22 +1,19 @@
-package controller;
+package com.sudoku.controller;
 
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import model.SudokuEngine;
-import model.SudokuGenerator;
-import view.SudokuFrame;
+import com.sudoku.model.SudokuEngine;
+import com.sudoku.model.SudokuGenerator;
+import com.sudoku.view.SudokuFrame;
 
 public class SudokuController {
     private SudokuFrame view;
     private SudokuEngine engine;
     private SudokuGenerator generator;
-    
+
     // Biến dùng để theo dõi trạng thái đang chạy hay đang dừng
     private boolean isRunning = false;
-    
-    // ==============================
-    // Biến dùng cho chức năng Hint
-    // ==============================
+
     private int hintCount = 0;
     private final int MAX_HINT = 3;
 
@@ -51,7 +48,7 @@ public class SudokuController {
 
             view.updateStatus(
                     "Đã tạo mới. Hint: "
-                    + hintCount + "/" + MAX_HINT);
+                            + hintCount + "/" + MAX_HINT);
         });
 
         // 2. Xử lý nút "Tự Nhập / Xóa"
@@ -89,6 +86,33 @@ public class SudokuController {
 
             giveHint();
         });
+        // [UR-4.4]
+        // Kiểm tra lỗi realtime khi nhập
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                final int row = i;
+                final int col = j;
+
+                view.getCell(row, col)
+                        .addKeyListener(new java.awt.event.KeyAdapter() {
+
+                            @Override
+                            public void keyReleased(
+                                    java.awt.event.KeyEvent e) {
+                                // [UR-4.3]
+                                // Highlight lại các ô cùng số
+                                view.highlightSameNumbers();
+                                // [UR-4.4]
+                                // Kiểm tra lỗi Sudoku
+                                checkBoardErrors();
+
+
+                            }
+                        });
+            }
+        }
     }
 
     private void start() {
@@ -114,8 +138,8 @@ public class SudokuController {
 
                 view.updateStatus(
                         "Fitness: "
-                        + ind.getFitness()
-                        + "/162 | Gen: đang chạy...");
+                                + ind.getFitness()
+                                + "/162 | Gen: đang chạy...");
             });
         });
 
@@ -172,64 +196,136 @@ public class SudokuController {
         view.getBtnHint().setEnabled(true);
     }
 
-    // Điền đúng giá trị vào ô đang chọn
-  
     private void giveHint() {
-
-        // Giới hạn số lần hint
+        // [UR-4.2]
+        // Kiểm tra số lần sử dụng Hint đã đạt giới hạn chưa
         if (hintCount >= MAX_HINT) {
-
             view.updateStatus("Đã hết lượt Hint!");
-
             return;
         }
-
-        // Lấy ô đang chọn
+        // [UR-4.1]
+        // Lấy vị trí ô mà người chơi đang chọn
         int row = view.getSelectedRow();
         int col = view.getSelectedCol();
 
-        // Chưa chọn ô
+        // Kiểm tra người chơi đã chọn ô chưa
         if (row == -1 || col == -1) {
-
             view.updateStatus("Hãy chọn 1 ô trống!");
-
             return;
         }
-
         int[][] board = view.getBoardData();
 
-        // Ô đã có số
         if (board[row][col] != 0) {
-
             view.updateStatus("Ô này đã có số!");
-
             return;
         }
-
-        // Lấy đáp án đúng
         int[][] solution = engine.getSolution();
 
-        // Kiểm tra solution có tồn tại không
         if (solution == null) {
 
             view.updateStatus("Chưa có đáp án!");
 
             return;
         }
-
         int correctValue = solution[row][col];
-
-        // Điền vào board
         board[row][col] = correctValue;
-
-        // Update giao diện
         view.setCellValue(row, col, correctValue);
 
-        // Tăng số lần hint
+        // Tăng số lần đã sử dụng Hint
         hintCount++;
 
+        // [UR-4.2]
+        // Hiển thị số lượt Hint đã dùng
         view.updateStatus(
                 "Đã dùng Hint: "
-                + hintCount + "/" + MAX_HINT);
+                        + hintCount + "/" + MAX_HINT);
     }
+    // [UR-4.4]
+    // Kiểm tra ô có vi phạm luật Sudoku không
+    private boolean isInvalid(
+            int[][] board,
+            int row,
+            int col,
+            int value) {
+
+        // Check trùng hàng
+        for (int j = 0; j < 9; j++) {
+
+            if (j != col &&
+                    board[row][j] == value) {
+
+                return true;
+            }
+        }
+
+        // Check trùng cột
+        for (int i = 0; i < 9; i++) {
+
+            if (i != row &&
+                    board[i][col] == value) {
+
+                return true;
+            }
+        }
+
+        // Check block 3x3
+        int startRow = (row / 3) * 3;
+        int startCol = (col / 3) * 3;
+
+        for (int i = startRow; i < startRow + 3; i++) {
+
+            for (int j = startCol; j < startCol + 3; j++) {
+
+                if ((i != row || j != col)
+                        &&
+                        board[i][j] == value) {
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    //[UR-4.4]
+//Kiểm tra toàn bộ board và highlight lỗi
+    private void checkBoardErrors() {
+
+        int[][] board = view.getBoardData();
+
+
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                int value = board[i][j];
+
+                // Bỏ qua ô trống
+                if (value == 0) {
+                    continue;
+                }
+
+                // Check số không hợp lệ
+                if (value < 1 || value > 9) {
+
+                    view.highlightErrorCell(i, j);
+
+                    continue;
+                }
+
+                // Check trùng Sudoku
+                if (isInvalid(board, i, j, value)) {
+
+                    view.highlightErrorCell(i, j);
+                }
+            }
+        }
+    }
+    //[UR-4.4]
+//Refresh lại lỗi sau khi click ô
+    public void refreshErrors() {
+
+        checkBoardErrors();
+    }
+
 }
