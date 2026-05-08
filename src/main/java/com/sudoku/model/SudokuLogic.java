@@ -54,15 +54,22 @@ public class SudokuLogic {
 
     public boolean isValidRules(int[][] matrix, int row, int col, int num) {
         for (int i = 0; i < 9; i++) {
-            // Kiểm tra trùng hàng cột
-            if (matrix[row][i] == num || matrix[i][col] == num) return false;
+            // Kiểm tra hàng: bỏ qua chính cột đang xét
+            if (i != col && matrix[row][i] == num) return false;
+            // Kiểm tra cột: bỏ qua chính hàng đang xét
+            if (i != row && matrix[i][col] == num) return false;
         }
-        // Kiểm tra trùng trong khối
+
+        // Kiểm tra trong khối 3x3
         int startR = row - row % 3;
         int startC = col - col % 3;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (matrix[startR + i][startC + j] == num) return false;
+                int currentRow = startR + i;
+                int currentCol = startC + j;
+                // Bỏ qua chính ô đang xét
+                if (currentRow == row && currentCol == col) continue;
+                if (matrix[currentRow][currentCol] == num) return false;
             }
         }
         return true;
