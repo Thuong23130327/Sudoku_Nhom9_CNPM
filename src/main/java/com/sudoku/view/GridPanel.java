@@ -1,4 +1,4 @@
-package main.java.com.sudoku.view;
+package com.sudoku.view;
 
 public class GridPanel {
     
