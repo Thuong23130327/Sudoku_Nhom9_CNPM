@@ -1,8 +1,7 @@
-package com.sudoku.model;
+package model;
 
 import java.util.ArrayList;
 import java.util.*;
-import com.sudoku.model.Gene;
 
 public class Individual implements Comparable<Individual>{
 	private List<Gene> genes;

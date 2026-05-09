@@ -10,6 +10,7 @@ public class SudokuController {
     private SudokuFrame view;
     private SudokuEngine engine;
     private SudokuGenerator generator;
+    private int[][] currentMatrix;
 
     // Biến dùng để theo dõi trạng thái đang chạy hay đang dừng
     private boolean isRunning = false;
@@ -29,27 +30,43 @@ public class SudokuController {
     }
 
     private void initController() {
-
-        // 1. Xử lý nút "Tạo Mới"
+ // ==========================================================
+        // UR-1.1: Xử lý nút "Tạo Mới" (Generate Game)
+        // ==========================================================
         view.getBtnGenerate().addActionListener(e -> {
-
             if (isRunning) return; // Nếu đang giải thì không cho bấm
+            
+            // Xóa ngẫu nhiên 40 ô để tạo currentMatrix
+            int[][] newBoard = generator.generate(40); 
+            
+            // Khởi tạo và lưu lại bản sao của đề bài vào currentMatrix
+            currentMatrix = new int[9][9];
+            for (int i = 0; i < 9; i++) {
+                System.arraycopy(newBoard[i], 0, currentMatrix[i], 0, 9);
+            }
 
-            // Reset số lần hint
-            hintCount = 0;
-
-            // Tạo mới
-            int[][] newBoard = generator.generate(45);
-
-            // Lưu đáp án hoàn chỉnh vào engine
-            engine.setSolution(generator.getSolution());
-
-            view.setBoardData(newBoard);
-
-            view.updateStatus(
-                    "Đã tạo mới. Hint: "
-                            + hintCount + "/" + MAX_HINT);
+            // setBoardData sẽ tự động cấu hình isFixedCell = true (setEditable = false)
+            view.setBoardData(currentMatrix);
+            view.updateStatus("Đã tạo mới (ẩn 40 ô). Nhấn Giải để bắt đầu.");
         });
+
+        // ==========================================================
+        // UR-1.2: Xử lý nút "Làm Mới" (Reset Game)
+        // ==========================================================
+        view.getBtnReset().addActionListener(e -> {
+            if (isRunning) return;
+            
+            if (currentMatrix != null) {
+                // Đưa mảng gốc vào lại, hàm setBoardData sẽ đè lại giao diện,
+                // tự động xóa các ô người chơi đã nhập và giữ nguyên ô đề bài
+                view.setBoardData(currentMatrix);
+                view.updateStatus("Đã làm mới ván chơi về trạng thái ban đầu!");
+            } else {
+                view.updateStatus("Chưa có ván đấu nào để làm mới!");
+            }
+        });
+
+   
 
         // 2. Xử lý nút "Tự Nhập / Xóa"
         view.getBtnClear().addActionListener(e -> {
