@@ -1,5 +1,7 @@
 package com.sudoku.model;
 
+import com.sudoku.model.Individual;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

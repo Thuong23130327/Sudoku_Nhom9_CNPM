@@ -13,10 +13,14 @@ public class SudokuFrame extends JFrame {
 
     private JTextField[][] cells = new JTextField[9][9];
 
-    private JButton btnSolve, btnGenerate, btnClear;
+    private JButton btnSolve, btnGenerate, btnClear, btnReset;
     private JButton btnHint;
+    private JLabel lblStatus, lblHintCount;
 
-    private JLabel lblStatus;
+    private JLabel lblTimer;
+    private JButton btnPause;
+
+    private JLabel lblMistakes;
 
     // Lưu ô đang được chọn
     private int selectedRow = -1;
@@ -26,7 +30,7 @@ public class SudokuFrame extends JFrame {
 
         setTitle("Sudoku");
 
-        setSize(800, 600);
+        setSize(1000, 650);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -158,18 +162,31 @@ public class SudokuFrame extends JFrame {
         btnGenerate = new JButton("Tạo Mới");
 
         btnClear = new JButton("Tự Nhập / Xóa");
-
-        btnHint = new JButton("HINT");
-
+        btnReset = new JButton("Làm Mới");
+        btnHint = new JButton("Gợi ý (Chọn 1 ô)");
+        lblHintCount = new JLabel("Gợi ý: 3/3");
+        lblHintCount.setForeground(new Color(0, 128, 0)); // Màu xanh lá đậm
+        lblHintCount.setFont(new Font("Arial", Font.BOLD, 14));
         btnSolve = new JButton("GIẢI");
-
         lblStatus = new JLabel("Sẵn sàng!");
 
+        //Time:
+        lblTimer = new JLabel("Thời gian: 00:00");
+        btnPause = new JButton("Tạm dừng");
+        //Tính số lần sai:
+        lblMistakes = new JLabel("Lỗi: 0/3");
+        lblMistakes.setForeground(Color.RED);
+
         pnlControl.add(btnGenerate);
+        pnlControl.add(btnReset);
         pnlControl.add(btnClear);
         pnlControl.add(btnHint);
+        pnlControl.add(lblHintCount);
         pnlControl.add(btnSolve);
         pnlControl.add(lblStatus);
+        pnlControl.add(btnPause);
+        pnlControl.add(lblTimer);
+        pnlControl.add(lblMistakes);
 
         add(pnlControl, BorderLayout.SOUTH);
     }
@@ -244,7 +261,7 @@ public class SudokuFrame extends JFrame {
                             .setText(String.valueOf(board[i][j]));
 
                     // =================================================================
-                    // UC-2.4: Hệ thống ngăn chặn việc chỉnh sửa/xóa ô thuộc đề bài gốc
+                    // UR-2.4: Hệ thống ngăn chặn việc chỉnh sửa/xóa ô thuộc đề bài gốc
                     // =================================================================
 
                     // Con số nằm trong ô thuộc đề bài gốc thì không được phép thay đổi:
@@ -257,7 +274,7 @@ public class SudokuFrame extends JFrame {
 
                 } else {
                     // =================================================================
-                    // UC-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
+                    // UR-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
                     // =================================================================
                     cells[i][j].setText("");
 
@@ -312,7 +329,20 @@ public class SudokuFrame extends JFrame {
             }
         }
     }
+    //Hàm cập nhật label hiển thị số lượt gợi ý
+    public void updateHintUI(int remaining, int max) {
+        lblHintCount.setText("Lượt: " + remaining + "/" + max);
 
+        if (remaining <= 0) {
+            btnHint.setEnabled(false);
+            btnHint.setBackground(Color.RED);
+            lblHintCount.setForeground(Color.RED); // Chữ label cũng chuyển đỏ khi hết lượt
+        } else {
+            btnHint.setEnabled(true);
+            btnHint.setBackground(Color.GREEN);
+            lblHintCount.setForeground(new Color(0, 128, 0));
+        }
+    }
     // Update status
     public void updateStatus(String msg) {
 
@@ -407,6 +437,21 @@ public class SudokuFrame extends JFrame {
                 .setBackground(
                         new Color(255, 120, 120));
     }
+
+    // Hàm ẩn/hiện bàn cờ khi Pause (UR-5.2)
+    public void setCellsVisible(boolean visible) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                cells[i][j].setVisible(visible);
+            }
+        }
+    }
+    //Hàm cập nhật số lần điền sai
+    public void updateMistakeUI(int current, int max) {
+        lblMistakes.setText("Lỗi: " + current + "/" + max);
+    }
+
+
     // Getter ô đang chọn
     public int getSelectedRow() {
         return selectedRow;
@@ -425,6 +470,10 @@ public class SudokuFrame extends JFrame {
         return btnGenerate;
     }
 
+    public JButton getBtnReset() {
+        return btnReset;
+    }
+
     public JButton getBtnClear() {
         return btnClear;
     }
@@ -432,6 +481,10 @@ public class SudokuFrame extends JFrame {
     public JButton getBtnHint() {
         return btnHint;
     }
+
+    public JLabel getLblTimer() { return lblTimer; }
+    public JButton getBtnPause() { return btnPause; }
+
     public JTextField getCell(
             int row,
             int col) {

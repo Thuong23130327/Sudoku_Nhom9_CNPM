@@ -1,5 +1,6 @@
 package com.sudoku.model;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.sudoku.model.Individual;
@@ -53,6 +54,7 @@ public class SudokuEngine {
 
             // Kiểm tra điều kiện dừng
             if (currentFitness == 162) {
+                this.solution = individualToMatrix(best);
                 System.out.println("Giải thành công tại thế hệ: " + generation);
                 isRunning = false;
                 break;
@@ -77,6 +79,15 @@ public class SudokuEngine {
             generation++;
         }
     }
-
+    private int[][] individualToMatrix(Individual ind) {
+        int[][] matrix = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            List<Integer> row = ind.getGenes().get(i).getNumber();
+            for (int j = 0; j < 9; j++) {
+                matrix[i][j] = row.get(j);
+            }
+        }
+        return matrix;
+    }
 
 }
