@@ -42,7 +42,7 @@ public class SudokuController {
         // UR-1.1: Xử lý nút "Tạo Mới" (Generate Game)
         // ==========================================================
         view.getBtnGenerate().addActionListener(e -> {
-            if (isRunning) return; // Nếu đang giải thì không cho bấm
+            if (isRunning) stop(); // Nếu đang giải thì không cho bấm
 
             // Xóa ngẫu nhiên 40 ô để tạo currentMatrix
             int[][] newBoard = generator.generate(40);
@@ -59,11 +59,11 @@ public class SudokuController {
             hintCount = 0; // Reset biến đếm về 0 (đã dùng 0 lượt)
             view.updateHintUI(MAX_HINT, MAX_HINT); // Hiển thị lại 3/3
 
-            hintCount = 0;
             mistakeCount = 0; // Quan trọng: Reset số lỗi
-            view.updateHintUI(MAX_HINT, MAX_HINT);
             view.updateMistakeUI(0, MAX_MISTAKES);
             view.updateStatus("Ván mới bắt đầu!");
+
+            engine.setOnGenerationEvolved(null);
 
             // BẮT BUỘC: Chạy Engine ngầm để có Solution ngay từ đầu
             new SwingWorker<Void, Void>() {
@@ -71,6 +71,10 @@ public class SudokuController {
                 protected Void doInBackground() {
                     engine.solve(currentMatrix); // Giải dựa trên đề bài mới tạo
                     return null;
+                }
+                @Override
+                protected void done() {
+                    view.updateStatus("Ván chơi đã sẵn sàng (Đáp án đã được lưu ngầm)!");
                 }
             }.execute();
             // UR-5.1: Bắt đầu bộ đếm thời gian
@@ -115,14 +119,19 @@ public class SudokuController {
         view.getBtnSolve().addActionListener(e -> {
 
             if (isRunning) {
-
-                // Nếu đang chạy -> Bấm để DỪNG
                 stop();
-
             } else {
+                // Kiểm tra xem đã có đáp án giải ngầm từ lúc Tạo mới chưa
+                int[][] sol = engine.getSolution();
 
-                // Nếu đang dừng -> Bấm để CHẠY
-                start();
+                if (sol != null) {
+                    // Nếu đã có đáp án, hiển thị ngay lập tức (Instant Solve)
+                    displaySolutionToView(sol);
+                    view.updateStatus("Đã hiển thị đáp án chuẩn!");
+                } else {
+                    // Nếu chưa có (Engine ngầm chưa xong), thì mới chạy hiệu ứng giải
+                    start();
+                }
             }
         });
 
@@ -176,7 +185,16 @@ public class SudokuController {
         }
 
     }
-
+    private void displaySolutionToView(int[][] sol) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                // Chỉ điền vào những ô người dùng được phép nhập
+                if (view.getCell(i, j).isEditable()) {
+                    view.setCellValue(i, j, sol[i][j]);
+                }
+            }
+        }
+    }
     private void start() {
 
         // BƯỚC 1: Lấy dữ liệu từ giao diện
