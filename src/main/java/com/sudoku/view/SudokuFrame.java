@@ -244,7 +244,7 @@ public class SudokuFrame extends JFrame {
                             .setText(String.valueOf(board[i][j]));
 
                     // =================================================================
-                    // UR-2.4: Hệ thống ngăn chặn việc chỉnh sửa/xóa ô thuộc đề bài gốc
+                    // UC-2.4: Hệ thống ngăn chặn việc chỉnh sửa/xóa ô thuộc đề bài gốc
                     // =================================================================
 
                     // Con số nằm trong ô thuộc đề bài gốc thì không được phép thay đổi:
@@ -257,7 +257,7 @@ public class SudokuFrame extends JFrame {
 
                 } else {
                     // =================================================================
-                    // UR-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
+                    // UC-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
                     // =================================================================
                     cells[i][j].setText("");
 

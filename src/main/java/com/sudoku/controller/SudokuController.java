@@ -62,7 +62,6 @@ public class SudokuController {
             hintCount = 0;
 
             view.updateStatus("Mời bạn nhập đề sudoku...");
-        });
 
         // 3. Xử lý nút "GIẢI / DỪNG"
         view.getBtnSolve().addActionListener(e -> {
