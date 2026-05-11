@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
+import com.sudoku.controller.SudokuController;
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)

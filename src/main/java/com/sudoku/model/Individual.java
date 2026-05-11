@@ -1,36 +1,35 @@
-package model;
+package com.sudoku.model;
 
-import java.util.ArrayList;
 import java.util.*;
 
 public class Individual implements Comparable<Individual>{
-	private List<Gene> genes;
-	private int fitness;
+    private List<Gene> genes;
+    private int fitness;
 
-	public Individual(int[][] board) {
-		super();
-		this.genes = new ArrayList<>();
-		
-		//Khởi tạo 9 Gene (9 ô 3x3)
-		for (int i = 0; i < 9; i++) {
-			int[] row = board[i];
-			genes.add(new Gene(row));
-		}
-	}
-		
-	public Individual() {
-		this.genes = new ArrayList<>();
-	}
+    public Individual(int[][] board) {
+        super();
+        this.genes = new ArrayList<>();
 
-	public List<Gene> getGenes() {
-		return genes;
-	}
+        //Khởi tạo 9 Gene (9 ô 3x3)
+        for (int i = 0; i < 9; i++) {
+            int[] row = board[i];
+            genes.add(new Gene(row));
+        }
+    }
 
-	public void setGenes(List<Gene> genes) {
-		this.genes = genes;
-	}
-	
-	public int getFitness() {
+    public Individual() {
+        this.genes = new ArrayList<>();
+    }
+
+    public List<Gene> getGenes() {
+        return genes;
+    }
+
+    public void setGenes(List<Gene> genes) {
+        this.genes = genes;
+    }
+
+    public int getFitness() {
         return fitness;
     }
 
@@ -64,7 +63,7 @@ public class Individual implements Comparable<Individual>{
         for (int blockRow = 0; blockRow < 3; blockRow++) {
             for (int blockCol = 0; blockCol < 3; blockCol++) {
                 Set<Integer> uniqueNumbers = new HashSet<>();
-                
+
                 // Duyệt qua 9 ô trong khối
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {

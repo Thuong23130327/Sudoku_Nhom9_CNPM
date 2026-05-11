@@ -1,5 +1,5 @@
 package com.sudoku.model;
-import com.sudoku.model.*;
+
 /**
  * [UC-03] MODULE KIỂM TRA LOGIC VÀ GIẢI THUẬT
  * Phụ trách: Nguyễn Hoài Thương
@@ -27,6 +27,27 @@ public class SudokuLogic {
             }
         }
         return true;
+    }
+
+    /**
+     * // UR-3.2: Hệ thống phải cung cấp chức năng "Kiểm tra toàn bảng" để thông báo các lỗi sai hiện có cho người chơi.
+     * Kiểm tra toàn bộ bảng, trả về mảng 2 chiều kiểu boolean, true nếu ô đó bị lỗi vi phạm luật.
+     */
+    public boolean[][] validateWholeBoard(int[][] currentBoard) {
+        boolean[][] errors = new boolean[9][9];
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                int num = currentBoard[r][c];
+                if (num != 0) {
+                    currentBoard[r][c] = 0;
+                    if (!isValidRules(currentBoard, r, c, num)) {
+                        errors[r][c] = true;
+                    }
+                    currentBoard[r][c] = num;
+                }
+            }
+        }
+        return errors;
     }
 
     /**

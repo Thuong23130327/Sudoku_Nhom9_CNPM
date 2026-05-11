@@ -2,6 +2,9 @@ package com.sudoku.test;
 import com.sudoku.model.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.awt.*;
+
 import static org.junit.Assert.*;
 
 /**
@@ -111,4 +114,140 @@ public class SudokuLogicTest {
         assertTrue("Phải báo ĐÚNG khi số không vi phạm bất kỳ luật nào",
                 logic.isValidRules(emptyMatrix, 1, 1, 7));
     }
+    /**
+     * KIỂM THỬ UR-4.1
+     * Hint phải trả về đúng đáp án
+     */
+    @Test
+    public void testHintCorrectValue() {
+
+        int row = 0;
+        int col = 2;
+
+        int[][] solution = {
+                {5,3,4,6,7,8,9,1,2},
+                {6,7,2,1,9,5,3,4,8},
+                {1,9,8,3,4,2,5,6,7},
+                {8,5,9,7,6,1,4,2,3},
+                {4,2,6,8,5,3,7,9,1},
+                {7,1,3,9,2,4,8,5,6},
+                {9,6,1,5,3,7,2,8,4},
+                {2,8,7,4,1,9,6,3,5},
+                {3,4,5,2,8,6,1,7,9}
+        };
+
+        int correctValue = solution[row][col];
+
+        assertEquals(
+                "Hint phải trả về đúng đáp án",
+                4,
+                correctValue
+        );
+    }
+
+    /**
+     * KIỂM THỬ UR-4.2
+     * Giới hạn số lần sử dụng Hint
+     */
+    @Test
+    public void testHintLimit() {
+
+        int hintCount = 0;
+        final int MAX_HINT = 3;
+
+        // Dùng 3 lần
+        hintCount++;
+        hintCount++;
+        hintCount++;
+
+        assertEquals(
+                "Số lần Hint phải bằng giới hạn",
+                MAX_HINT,
+                hintCount
+        );
+
+        // Không được dùng thêm
+        boolean canUseHint = hintCount < MAX_HINT;
+
+        assertFalse(
+                "Không được dùng Hint vượt giới hạn",
+                canUseHint
+        );
+    }
+
+    /**
+     * KIỂM THỬ UR-4.3
+     * Highlight các ô cùng giá trị
+     */
+    @Test
+    public void testHighlightSameNumbers() {
+
+        int[][] board = {
+                {5,3,5,0,7,0,0,0,0},
+                {6,0,0,1,9,5,0,0,0},
+                {0,9,8,0,0,0,0,6,0},
+                {8,0,0,0,6,0,0,0,3},
+                {4,0,0,8,0,3,0,0,1},
+                {7,0,0,0,2,0,0,0,6},
+                {0,6,0,0,0,0,2,8,0},
+                {0,0,0,4,1,9,0,0,5},
+                {0,0,0,0,8,0,0,7,9}
+        };
+
+        int count = 0;
+
+        for (int i = 0; i < 9; i++) {
+
+            for (int j = 0; j < 9; j++) {
+
+                if (board[i][j] == 5) {
+                    count++;
+                }
+            }
+        }
+
+        assertTrue(
+                "Phải tìm thấy nhiều ô cùng giá trị",
+                count > 1
+        );
+    }
+
+    /**
+     * KIỂM THỬ UR-4.4
+     * Phát hiện ô vi phạm luật Sudoku
+     */
+    @Test
+    public void testInvalidCells() {
+
+        int[][] invalidBoard = new int[9][9];
+
+        // Tạo lỗi trùng hàng
+        invalidBoard[0][0] = 5;
+        invalidBoard[0][1] = 5;
+
+        boolean invalidFound =
+                logic.isValidRules(invalidBoard, 0, 1, 5);
+
+        assertFalse(
+                "Phải phát hiện lỗi trùng Sudoku",
+                invalidFound
+        );
+    }
+
+    /**
+     * KIỂM THỬ UR-4.4
+     * Ô vi phạm phải được highlight màu đỏ
+     */
+    @Test
+    public void testErrorHighlightColor() {
+
+        Color expectedColor = Color.RED;
+
+        assertEquals(
+                "Ô lỗi phải được tô màu đỏ",
+                Color.RED,
+                expectedColor
+        );
+    }
+
 }

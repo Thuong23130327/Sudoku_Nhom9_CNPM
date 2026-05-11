@@ -1,18 +1,16 @@
-package model;
+package com.sudoku.model;
 
+import java.util.List;
 import java.util.function.Consumer;
-
-import model.Individual;
-import model.Population;
 
 public class SudokuEngine {
     private boolean isRunning = false;
     private int [][] solution;
-   private Consumer<Individual> onGenerationEvolved;
+    private Consumer<Individual> onGenerationEvolved;
 
     public Consumer<Individual> getOnGenerationEvolved() {
-		return onGenerationEvolved;
-	}
+        return onGenerationEvolved;
+    }
 
     public void setOnGenerationEvolved(Consumer<Individual> callback) {
         this.onGenerationEvolved = callback;
@@ -31,9 +29,9 @@ public class SudokuEngine {
 
     public void solve(int[][] initialBoard) {
         isRunning = true;
-        
+
         Population pop = new Population(initialBoard);
-        
+
         int generation = 0;
         int bestFitness = 0;
         int count = 0;
@@ -53,6 +51,7 @@ public class SudokuEngine {
 
             // Kiểm tra điều kiện dừng
             if (currentFitness == 162) {
+                this.solution = individualToMatrix(best);
                 System.out.println("Giải thành công tại thế hệ: " + generation);
                 isRunning = false;
                 break;
@@ -77,6 +76,15 @@ public class SudokuEngine {
             generation++;
         }
     }
-
+    private int[][] individualToMatrix(Individual ind) {
+        int[][] matrix = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            List<Integer> row = ind.getGenes().get(i).getNumber();
+            for (int j = 0; j < 9; j++) {
+                matrix[i][j] = row.get(j);
+            }
+        }
+        return matrix;
+    }
 
 }
