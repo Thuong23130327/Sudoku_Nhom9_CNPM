@@ -4,3 +4,6 @@
 /main/
 /model/
 /view/
+out/
+.idea/
+*.class

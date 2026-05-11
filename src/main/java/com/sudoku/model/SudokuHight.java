@@ -2,7 +2,6 @@ package com.sudoku.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.sudoku.model.CellPosition;
 
 /**
  * [UC-04] HỆ THỐNG TRỢ GIÚP VÀ PHẢN HỒI THỊ GIÁC

@@ -3,9 +3,6 @@ package com.sudoku.model;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.sudoku.model.Individual;
-import com.sudoku.model.Population;
-
 public class SudokuEngine {
     private boolean isRunning = false;
     private int [][] solution;

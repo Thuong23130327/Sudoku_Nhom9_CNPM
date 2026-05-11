@@ -1,16 +1,19 @@
 package com.sudoku.controller;
 
-import javax.swing.*;
-
 import com.sudoku.model.SudokuEngine;
 import com.sudoku.model.SudokuGenerator;
+import com.sudoku.model.SudokuLogic;
 import com.sudoku.utils.TimerUtils;
 import com.sudoku.view.SudokuFrame;
+
+import javax.swing.*;
 
 public class SudokuController {
     private SudokuFrame view;
     private SudokuEngine engine;
     private SudokuGenerator generator;
+    private SudokuLogic logic;
+    private InputHandler inputHandler;
     private int[][] currentMatrix;
 
     private TimerUtils gameTimer;
@@ -31,8 +34,12 @@ public class SudokuController {
         // Khởi tạo các thành phần Model
         this.engine = new SudokuEngine();
         this.generator = new SudokuGenerator();
+        this.logic = new SudokuLogic();
 
         this.gameTimer = new TimerUtils(view.getLblTimer());
+        
+        // Khởi tạo InputHandler cho UR-3.1
+        this.inputHandler = new InputHandler(view, logic);
         // Gắn sự kiện cho các nút bấm
         initController();
     }
@@ -184,6 +191,72 @@ public class SudokuController {
             }
         }
 
+        // ==========================================================
+        // UR-3.2: Xử lý nút Kiểm Tra
+        // ==========================================================
+        view.getBtnValidate().addActionListener(e -> {
+            if (isRunning) return;
+
+            int[][] board = view.getBoardData();
+            boolean[][] errors = logic.validateWholeBoard(board);
+            boolean hasError = false;
+
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    if (errors[r][c]) {
+                        hasError = true;
+                        view.highlightErrorCell(r, c, true);
+                    } else {
+                        view.highlightErrorCell(r, c, false);
+                    }
+                }
+            }
+
+            if (hasError) {
+                view.updateStatus("Có lỗi trên bảng! (Các ô màu đỏ vi phạm luật)");
+            } else {
+                if (logic.isBoardComplete(board)) {
+                    view.updateStatus("Chúc mừng! Bạn đã giải xong Sudoku một cách hợp lệ!");
+                } else {
+                    view.updateStatus("Bảng hợp lệ. Hãy tiếp tục giải!");
+                }
+            }
+        });
+
+        // ==========================================================
+        // UR-3.3, UR-3.4: Xử lý nút Xem Giải Pháp (bằng Backtracking)
+        // ==========================================================
+        view.getBtnShowSolution().addActionListener(e -> {
+            if (isRunning) return;
+
+            int[][] board = view.getBoardData();
+            
+            // Validate để đảm bảo đề bài không bị lỗi trước khi giải
+            boolean[][] errors = logic.validateWholeBoard(board);
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    if (errors[r][c]) {
+                        view.updateStatus("Lỗi! Bảng hiện tại sai luật, không thể giải.");
+                        view.highlightErrorCell(r, c, true);
+                        return;
+                    }
+                }
+            }
+
+            view.updateStatus("Đang giải bằng Backtracking...");
+            
+            // UR-3.3: Giải bằng Backtracking
+            boolean solved = logic.solveSudoku(board);
+            
+            if (solved) {
+                // UR-3.4: Hiển thị giải pháp lên giao diện
+                view.setBoardData(board);
+                view.updateStatus("Đã giải xong bằng thuật toán Backtracking!");
+            } else {
+                view.updateStatus("Không tìm thấy giải pháp cho bảng này.");
+            }
+        });
+
     }
     private void displaySolutionToView(int[][] sol) {
         for (int i = 0; i < 9; i++) {
@@ -280,8 +353,7 @@ public class SudokuController {
         // [UR-4.2]
         // Kiểm tra số lần sử dụng Hint đã đạt giới hạn chưa
         if (hintCount >= MAX_HINT) {
-            view.updateStatus("Bạn đã hết lượt gợi ý!");
-            view.updateHintUI(0, MAX_HINT);
+            view.updateStatus("Đã hết lượt Hint!");
             return;
         }
         // [UR-4.1]
@@ -342,10 +414,10 @@ public class SudokuController {
                     view.updateHintUI(remaining, MAX_HINT);
                     // [UR-4.2]
                     // Hiển thị số lượt Hint đã dùng
-                    view.updateStatus("Đã dùng gợi ý! Còn " + remaining + " lượt.");
+                    view.updateStatus(
+                            "Đã dùng Hint: "
+                                    + hintCount + "/" + MAX_HINT);
 
-                    // Dừng engine ngầm sau khi đã lấy được hint
-                    engine.stop();
                 });
             }
         });

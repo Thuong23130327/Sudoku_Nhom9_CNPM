@@ -15,6 +15,8 @@ public class SudokuFrame extends JFrame {
 
     private JButton btnSolve, btnGenerate, btnClear, btnReset;
     private JButton btnHint;
+    private JButton btnValidate; // UR-3.2: Nút Kiểm tra toàn bảng
+    private JButton btnShowSolution; // UR-3.4: Nút Xem giải pháp
     private JLabel lblStatus, lblHintCount;
 
     private JLabel lblTimer;
@@ -167,6 +169,8 @@ public class SudokuFrame extends JFrame {
         lblHintCount = new JLabel("Gợi ý: 3/3");
         lblHintCount.setForeground(new Color(0, 128, 0)); // Màu xanh lá đậm
         lblHintCount.setFont(new Font("Arial", Font.BOLD, 14));
+        btnValidate = new JButton("Kiểm Tra");
+        btnShowSolution = new JButton("Xem Giải Pháp");
         btnSolve = new JButton("GIẢI");
         lblStatus = new JLabel("Sẵn sàng!");
 
@@ -182,6 +186,8 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(btnClear);
         pnlControl.add(btnHint);
         pnlControl.add(lblHintCount);
+        pnlControl.add(btnValidate);
+        pnlControl.add(btnShowSolution);
         pnlControl.add(btnSolve);
         pnlControl.add(lblStatus);
         pnlControl.add(btnPause);
@@ -438,6 +444,23 @@ public class SudokuFrame extends JFrame {
                         new Color(255, 120, 120));
     }
 
+    // UR-3.1, UR-3.2: Highlight ô bị lỗi (sai luật Sudoku)
+    public void highlightErrorCell(int row, int col, boolean isError) {
+        if (isError) {
+            cells[row][col].setForeground(Color.RED);
+            cells[row][col].setBackground(new Color(255, 200, 200));
+        } else {
+            // Trả lại màu bình thường nếu không phải là đề bài
+            if (cells[row][col].isEditable()) {
+                cells[row][col].setForeground(Color.BLACK);
+                cells[row][col].setBackground(Color.WHITE);
+            } else {
+                cells[row][col].setForeground(Color.BLUE);
+                cells[row][col].setBackground(new Color(230, 230, 230));
+            }
+        }
+    }
+
     // Hàm ẩn/hiện bàn cờ khi Pause (UR-5.2)
     public void setCellsVisible(boolean visible) {
         for (int i = 0; i < 9; i++) {
@@ -480,6 +503,14 @@ public class SudokuFrame extends JFrame {
 
     public JButton getBtnHint() {
         return btnHint;
+    }
+
+    public JButton getBtnValidate() {
+        return btnValidate;
+    }
+
+    public JButton getBtnShowSolution() {
+        return btnShowSolution;
     }
 
     public JLabel getLblTimer() { return lblTimer; }
