@@ -13,7 +13,7 @@ public class SudokuFrame extends JFrame {
 
     private JTextField[][] cells = new JTextField[9][9];
 
-    private JButton btnSolve, btnGenerate, btnClear, btnReset;
+    private JButton btnGenerate, btnReset;
     private JButton btnHint;
     private JButton btnValidate; // UR-3.2: Nút Kiểm tra toàn bảng
     private JButton btnShowSolution; // UR-3.4: Nút Xem giải pháp
@@ -163,7 +163,6 @@ public class SudokuFrame extends JFrame {
 
         btnGenerate = new JButton("Tạo Mới");
 
-        btnClear = new JButton("Tự Nhập / Xóa");
         btnReset = new JButton("Làm Mới");
         btnHint = new JButton("Gợi ý (Chọn 1 ô)");
         lblHintCount = new JLabel("Gợi ý: 3/3");
@@ -171,7 +170,6 @@ public class SudokuFrame extends JFrame {
         lblHintCount.setFont(new Font("Arial", Font.BOLD, 14));
         btnValidate = new JButton("Kiểm Tra");
         btnShowSolution = new JButton("Xem Giải Pháp");
-        btnSolve = new JButton("GIẢI");
         lblStatus = new JLabel("Sẵn sàng!");
 
         //Time:
@@ -183,12 +181,10 @@ public class SudokuFrame extends JFrame {
 
         pnlControl.add(btnGenerate);
         pnlControl.add(btnReset);
-        pnlControl.add(btnClear);
         pnlControl.add(btnHint);
         pnlControl.add(lblHintCount);
         // pnlControl.add(btnValidate); // Bỏ nút Kiểm tra theo yêu cầu
         pnlControl.add(btnShowSolution);
-        pnlControl.add(btnSolve);
         pnlControl.add(lblStatus);
         pnlControl.add(btnPause);
         pnlControl.add(lblTimer);
@@ -484,10 +480,7 @@ public class SudokuFrame extends JFrame {
         return selectedCol;
     }
 
-    // Getter cho các nút
-    public JButton getBtnSolve() {
-        return btnSolve;
-    }
+
 
     public JButton getBtnGenerate() {
         return btnGenerate;
@@ -497,9 +490,6 @@ public class SudokuFrame extends JFrame {
         return btnReset;
     }
 
-    public JButton getBtnClear() {
-        return btnClear;
-    }
 
     public JButton getBtnHint() {
         return btnHint;

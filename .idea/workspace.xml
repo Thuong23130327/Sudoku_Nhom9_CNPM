@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/GameController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/GameController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,21 +24,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "22130223-NguyenThanhPhuoc"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;22130223-NguyenThanhPhuoc&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/Thuong23130327/Sudoku_Nhom9_CNPM.git",
-    "accountId": "42d55cca-75f5-4915-a17c-df732abb2aec"
+    "accountId": "77726f4b-1b5a-43df-80d4-a984efead678"
   }
 }]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="3DZaQrw7IrDp9YZFrVBTF5acEUj" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -40,10 +48,43 @@
   "keyToString": {
     "Application.Main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main"
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="Sudoku_Nhom9_CNPM" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="" />
@@ -51,7 +92,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1778492032839</updated>
+      <workItem from="1778651382452" duration="3450000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
