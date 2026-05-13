@@ -186,7 +186,7 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(btnClear);
         pnlControl.add(btnHint);
         pnlControl.add(lblHintCount);
-        pnlControl.add(btnValidate);
+        // pnlControl.add(btnValidate); // Bỏ nút Kiểm tra theo yêu cầu
         pnlControl.add(btnShowSolution);
         pnlControl.add(btnSolve);
         pnlControl.add(lblStatus);
