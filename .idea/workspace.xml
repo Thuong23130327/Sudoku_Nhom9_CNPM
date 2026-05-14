@@ -6,15 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/GameController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/GameController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,12 +21,12 @@
     &quot;assignee&quot;: &quot;22130223-NguyenThanhPhuoc&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Thuong23130327/Sudoku_Nhom9_CNPM.git",
-    "accountId": "77726f4b-1b5a-43df-80d4-a984efead678"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Thuong23130327/Sudoku_Nhom9_CNPM.git&quot;,
+    &quot;accountId&quot;: &quot;77726f4b-1b5a-43df-80d4-a984efead678&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -44,25 +35,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Thuong&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -92,7 +83,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1778492032839</updated>
-      <workItem from="1778651382452" duration="3450000" />
+      <workItem from="1778651382452" duration="4431000" />
+      <workItem from="1778772970362" duration="2107000" />
     </task>
     <servers />
   </component>

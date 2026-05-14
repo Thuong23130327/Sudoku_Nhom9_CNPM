@@ -38,7 +38,7 @@ public class SudokuController {
 
         this.gameTimer = new TimerUtils(view.getLblTimer());
         this.gameController = new GameController(3); // 3 = MAX_MISTAKES
-        // Khởi tạo InputHandler cho UR-3.1
+        // [3.1.2] Khởi tạo InputHandler — validate realtime mỗi lần nhập số
         this.inputHandler = new InputHandler(view, logic);
         // Gắn sự kiện cho các nút bấm
         initController();
@@ -168,7 +168,7 @@ public class SudokuController {
         }
 
         // ==========================================================
-        // UR-3.2: Xử lý nút Kiểm Tra
+        // [3.1.5] Xử lý nút Kiểm Tra (đã ẩn khỏi UI, logic chuyển sang realtime)
         // ==========================================================
         /*
         view.getBtnValidate().addActionListener(e -> {
@@ -202,13 +202,13 @@ public class SudokuController {
         */
 
         // ==========================================================
-        // UR-3.3, UR-3.4: Xử lý nút Xem Giải Pháp (bằng Backtracking)
+        // [3.2.1] ~ [3.2.6] Xử lý nút Xem Giải Pháp (Auto-Solver Backtracking)
         // ==========================================================
         view.getBtnShowSolution().addActionListener(e -> {
 
             int[][] board = view.getBoardData();
 
-            // Validate để đảm bảo đề bài không bị lỗi trước khi giải
+            // [3.2.3] Validate toàn bảng trước khi giải
             boolean[][] errors = logic.validateWholeBoard(board);
             for (int r = 0; r < 9; r++) {
                 for (int c = 0; c < 9; c++) {
@@ -222,11 +222,11 @@ public class SudokuController {
 
             view.updateStatus("Đang giải bằng Backtracking...");
 
-            // UR-3.3: Giải bằng Backtracking
+            // [3.2.4] Giải bằng Backtracking
             boolean solved = logic.solveSudoku(board);
 
             if (solved) {
-                // UR-3.4: Hiển thị giải pháp lên giao diện
+                // [3.2.5] Hiển thị giải pháp lên giao diện
                 view.setBoardData(board);
                 view.updateStatus("Đã giải xong bằng thuật toán Backtracking!");
             } else {

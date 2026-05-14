@@ -15,8 +15,8 @@ public class SudokuFrame extends JFrame {
 
     private JButton btnGenerate, btnReset;
     private JButton btnHint;
-    private JButton btnValidate; // UR-3.2: Nút Kiểm tra toàn bảng
-    private JButton btnShowSolution; // UR-3.4: Nút Xem giải pháp
+    private JButton btnValidate; // [3.1.5] Nút Kiểm tra toàn bảng (đã ẩn khỏi UI)
+    private JButton btnShowSolution; // [3.2.1] Nút Xem giải pháp (Auto-Solver)
     private JLabel lblStatus, lblHintCount;
 
     private JLabel lblTimer;
@@ -440,7 +440,7 @@ public class SudokuFrame extends JFrame {
                         new Color(255, 120, 120));
     }
 
-    // UR-3.1, UR-3.2: Highlight ô bị lỗi (sai luật Sudoku)
+    // [3.1.4] Highlight ô bị lỗi (sai luật Sudoku) — phản hồi trực quan cho người chơi
     public void highlightErrorCell(int row, int col, boolean isError) {
         if (isError) {
             cells[row][col].setForeground(Color.RED);

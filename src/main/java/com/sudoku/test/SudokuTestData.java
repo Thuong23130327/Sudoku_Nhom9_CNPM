@@ -57,7 +57,7 @@ public class SudokuTestData {
             {0, 0, 0, 0, 0, 0, 0, 0, 0}
     };
 
-    // 6. Test Gần Hoàn Thành (UR-3.2): Chỉ còn 1 ô trống (số 0)
+    // 6. Test Gần Hoàn Thành (3.1.5): Chỉ còn 1 ô trống (số 0)
     public static final int[][] NEARLY_COMPLETE_BOARD = {
             {5, 3, 4, 6, 7, 8, 9, 1, 2},
             {6, 7, 2, 1, 9, 5, 3, 4, 8},
