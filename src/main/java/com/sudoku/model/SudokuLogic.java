@@ -3,12 +3,12 @@ package com.sudoku.model;
 /**
  * [UC-03] MODULE KIỂM TRA LOGIC VÀ GIẢI THUẬT
  * Phụ trách: Nguyễn Hoài Thương
- * Ánh xạ yêu cầu: UR-3.1, UR-3.2, UR-3.3, UR-3.4
+ * Ánh xạ luồng sự kiện: 3.1.3, 3.1.4, 3.1.5, 3.2.3, 3.2.4
  */
 public class SudokuLogic {
 
     /**
-     * [UR-3.1] Kiểm tra tính chính xác của nước đi (Strict Validation)
+     * [3.1.3] Kiểm tra tính chính xác của nước đi (Strict Validation)
      * So sánh trực tiếp giá trị nhập với ma trận đáp án đã có sẵn trong Model.
      */
     public boolean checkUserInput(SudokuBoard board, int row, int col, int num) {
@@ -17,7 +17,7 @@ public class SudokuLogic {
     }
 
     /**
-     * [UR-3.2] Kiểm tra trạng thái hoàn thành của bảng
+     * [3.1.5] Kiểm tra trạng thái hoàn thành của bảng
      * Quét toàn bộ bảng hiện tại để tìm ô trống (giá trị 0).
      */
     public boolean isBoardComplete(int[][] currentBoard) {
@@ -30,7 +30,7 @@ public class SudokuLogic {
     }
 
     /**
-     * // UR-3.2: Hệ thống phải cung cấp chức năng "Kiểm tra toàn bảng" để thông báo các lỗi sai hiện có cho người chơi.
+     * [3.2.3] Kiểm tra toàn bảng trước khi giải — trả mảng boolean lỗi cho Controller.
      * Kiểm tra toàn bộ bảng, trả về mảng 2 chiều kiểu boolean, true nếu ô đó bị lỗi vi phạm luật.
      */
     public boolean[][] validateWholeBoard(int[][] currentBoard) {
@@ -51,7 +51,7 @@ public class SudokuLogic {
     }
 
     /**
-     * [UR-3.3] Thuật toán tự động giải bảng (Backtracking)
+     * [3.2.4] Thuật toán tự động giải bảng bằng Backtracking
      * Sử dụng đệ quy để điền đầy các ô trống dựa trên quy tắc Sudoku.
      */
     public boolean solveSudoku(int[][] matrix) {

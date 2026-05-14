@@ -34,7 +34,6 @@ public class InputHandler {
                     public void changedUpdate(DocumentEvent e) { validateCell(); }
 
                     private void validateCell() {
-                        // Tránh conflict khi update UI từ listener
                         SwingUtilities.invokeLater(() -> {
                             String text = cell.getText();
                             if (text.isEmpty()) {
@@ -54,7 +53,7 @@ public class InputHandler {
                                 // Bỏ giá trị hiện tại ở ô này để kiểm tra (để không bị tự trùng chính nó)
                                 board[row][col] = 0;
                                 
-                                // UR-3.1: Kiểm tra tính hợp lệ của số vừa nhập theo luật Sudoku
+                                // [3.1.3] Kiểm tra tính hợp lệ của số vừa nhập theo luật Sudoku
                                 boolean isValid = logic.isValidRules(board, row, col, num);
                                 
                                 view.highlightErrorCell(row, col, !isValid);
