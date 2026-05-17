@@ -331,7 +331,7 @@ public class SudokuFrame extends JFrame {
     }
     //Hàm cập nhật label hiển thị số lượt gợi ý
     public void updateHintUI(int remaining, int max) {
-        lblHintCount.setText("Lượt: " + remaining + "/" + max);
+        lblHintCount.setText("Gợi ý: " + remaining + "/" + max);
 
         if (remaining <= 0) {
             btnHint.setEnabled(false);
