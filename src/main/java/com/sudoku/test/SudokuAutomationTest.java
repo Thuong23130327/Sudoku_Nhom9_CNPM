@@ -27,22 +27,22 @@ public class SudokuAutomationTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 { "Test Bảng Hợp Lệ", SudokuTestData.VALID_BOARD, true },
-                { "Test Trùng Hàng (UR-3.4)", SudokuTestData.INVALID_ROW, false },
-                { "Test Trùng Cột (UR-3.4)", SudokuTestData.INVALID_COL, false },
-                { "Test Trùng Khối (UR-3.4)", SudokuTestData.INVALID_BLOCK_BOARD, false },
-                { "Test Trạng Thái Chưa Xong (UR-3.2)", SudokuTestData.NEARLY_COMPLETE_BOARD, false },
-                { "Test Bảng Đã Xong (UR-3.2)", SudokuTestData.VALID_BOARD, true }
+                { "Test Trùng Hàng (3.1.3)", SudokuTestData.INVALID_ROW, false },
+                { "Test Trùng Cột (3.1.3)", SudokuTestData.INVALID_COL, false },
+                { "Test Trùng Khối (3.1.3)", SudokuTestData.INVALID_BLOCK_BOARD, false },
+                { "Test Trạng Thái Chưa Xong (3.1.5)", SudokuTestData.NEARLY_COMPLETE_BOARD, false },
+                { "Test Bảng Đã Xong (3.1.5)", SudokuTestData.VALID_BOARD, true }
         });
     }
 
     @Test
     public void verifySudokuValidation() {
-        // Kiểm tra tính đầy đủ (UR-3.2)
+        // Kiểm tra tính đầy đủ (3.1.5)
         if (testName.contains("Trạng Thái") || testName.contains("Đã Xong")) {
             assertEquals("Lỗi kiểm tra hoàn thành tại: " + testName,
                     expectedValid, logic.isBoardComplete(matrix));
         }
-        // Kiểm tra luật Sudoku (UR-3.4)
+        // Kiểm tra luật Sudoku (3.1.3)
         else {
             boolean result = logic.isValidRules(matrix, 0, 0, matrix[0][0] == 0 ? 1 : matrix[0][0]);
             assertEquals("Thất bại tại kịch bản: " + testName, expectedValid, result);

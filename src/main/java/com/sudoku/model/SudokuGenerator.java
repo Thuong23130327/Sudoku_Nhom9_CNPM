@@ -1,7 +1,6 @@
 package com.sudoku.model;
 
 import java.util.Random;
-import com.sudoku.model.Utility;
 
 public class SudokuGenerator {
     private int[][] board;
