@@ -15,6 +15,7 @@ public class SudokuFrame extends JFrame {
 
     private JButton btnGenerate, btnReset;
     private JButton btnHint;
+    private JButton btnUndo;
     private JButton btnValidate; // [3.1.5] Nút Kiểm tra toàn bảng (đã ẩn khỏi UI)
     private JButton btnShowSolution; // [3.2.1] Nút Xem giải pháp (Auto-Solver)
     private JLabel lblStatus, lblHintCount;
@@ -32,7 +33,7 @@ public class SudokuFrame extends JFrame {
 
         setTitle("Sudoku");
 
-        setSize(1000, 650);
+        setSize(1100, 680);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -162,7 +163,7 @@ public class SudokuFrame extends JFrame {
         JPanel pnlControl = new JPanel();
 
         btnGenerate = new JButton("Tạo Mới");
-
+        btnUndo = new JButton("Hoàn Tác");
         btnReset = new JButton("Làm Mới");
         btnHint = new JButton("Gợi ý (Chọn 1 ô)");
         lblHintCount = new JLabel("Gợi ý: 3/3");
@@ -189,6 +190,7 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(btnPause);
         pnlControl.add(lblTimer);
         pnlControl.add(lblMistakes);
+        pnlControl.add(btnUndo);
 
         add(pnlControl, BorderLayout.SOUTH);
     }
@@ -409,25 +411,20 @@ public class SudokuFrame extends JFrame {
         }
     }
 
-    // Set giá trị cho 1 ô
-    public void setCellValue(
-            int row,
-            int col,
-            int value) {
+    // Set giá trị cho 1 ô (Tối ưu cho cả Hint và Undo)
 
-        cells[row][col]
-                .setText(String.valueOf(value));
-
-        cells[row][col]
-                .setForeground(Color.RED);
-
-        cells[row][col]
-                .setEditable(false);
-        // [UR-4.4]
-        // Highlight trực quan ô được hệ thống tác động
-        cells[row][col]
-                .setBackground(
-                        new Color(255, 200, 200));
+    public void setCellValue(int row, int col, int value) {
+        if (value == 0) {
+            cells[row][col].setText("");
+            cells[row][col].setEditable(true);
+            cells[row][col].setForeground(Color.BLACK);
+            cells[row][col].setBackground(Color.WHITE);
+        } else {
+            cells[row][col].setText(String.valueOf(value));
+            cells[row][col].setForeground(Color.RED);
+            cells[row][col].setEditable(true); // Vẫn cho phép sửa nếu người chơi đổi ý gõ đè số khác
+            cells[row][col].setBackground(new Color(255, 200, 200)); // Highlight ô hệ thống tác động
+        }
     }
     // [UR-4.4]
     // Highlight ô lỗi màu đỏ
@@ -489,7 +486,7 @@ public class SudokuFrame extends JFrame {
     public JButton getBtnReset() {
         return btnReset;
     }
-
+    public JButton getBtnUndo(){return btnUndo; }
 
     public JButton getBtnHint() {
         return btnHint;
