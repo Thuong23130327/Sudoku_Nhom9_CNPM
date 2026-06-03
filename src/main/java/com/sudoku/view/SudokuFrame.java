@@ -19,8 +19,9 @@ public class SudokuFrame extends JFrame {
     private JButton btnValidate; // [3.1.5] Nút Kiểm tra toàn bảng (đã ẩn khỏi UI)
     private JButton btnShowSolution; // [3.2.1] Nút Xem giải pháp (Auto-Solver)
     private JLabel lblStatus, lblHintCount;
-
-    private JLabel lblTimer;
+    private JLabel LblMistakes;
+    private JComboBox<String> cblevel;
+    private JLabel lblTimer , lblLevels;
     private JButton btnPause;
 
     private JLabel lblMistakes;
@@ -30,21 +31,14 @@ public class SudokuFrame extends JFrame {
     private int selectedCol = -1;
 
     public SudokuFrame() {
-
         setTitle("Sudoku");
-
         setSize(1100, 680);
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         setLayout(new BorderLayout());
-
         // BÀN CỜ
         JPanel pnlBoard = new JPanel(new GridLayout(9, 9));
 
-        pnlBoard.setBorder(
-                BorderFactory.createEmptyBorder(
-                        10, 10, 10, 10));
+        pnlBoard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         Font font = new Font("Arial", Font.BOLD, 20);
 
@@ -161,19 +155,20 @@ public class SudokuFrame extends JFrame {
 
         // PANEL ĐIỀU KHIỂN
         JPanel pnlControl = new JPanel();
-
+        String[]levels = {"dễ", "trung bình","asian"};
+        cblevel = new JComboBox<>(levels);
         btnGenerate = new JButton("Tạo Mới");
         btnUndo = new JButton("Hoàn Tác");
         btnReset = new JButton("Làm Mới");
         btnHint = new JButton("Gợi ý (Chọn 1 ô)");
         lblHintCount = new JLabel("Gợi ý: 3/3");
-        lblHintCount.setForeground(new Color(0, 128, 0)); // Màu xanh lá đậm
-        lblHintCount.setFont(new Font("Arial", Font.BOLD, 14));
+        lblHintCount.setForeground(new Color(0, 128, 0));
         btnValidate = new JButton("Kiểm Tra");
         btnShowSolution = new JButton("Xem Giải Pháp");
         lblStatus = new JLabel("Sẵn sàng!");
-
+        lblLevels = new JLabel("Levels");
         //Time:
+
         lblTimer = new JLabel("Thời gian: 00:00");
         btnPause = new JButton("Tạm dừng");
         //Tính số lần sai:
@@ -191,7 +186,8 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(lblTimer);
         pnlControl.add(lblMistakes);
         pnlControl.add(btnUndo);
-
+        pnlControl.add(lblLevels);
+        pnlControl.add(cblevel);
         add(pnlControl, BorderLayout.SOUTH);
     }
 
@@ -292,43 +288,29 @@ public class SudokuFrame extends JFrame {
             }
         }
     }
-
+       // Update uc3 cập nhập lại gái trị các ô sau khi xóa
     // Cập nhật kết quả từ thuật toán
     public void updateBoardFromIndividual(Individual ind) {
-
         // Individual chứa List<Gene>,
         // mỗi Gene là một hàng
-
         for (int i = 0; i < 9; i++) {
-
-            List<Integer> rowData =
-                    ind.getGenes().get(i).getNumber();
-
+            List<Integer> rowData = ind.getGenes().get(i).getNumber();
             for (int j = 0; j < 9; j++) {
-
                 // Chỉ cập nhật các ô editable
                 if (cells[i][j].isEditable()) {
-
-                    cells[i][j]
-                            .setText(String.valueOf(rowData.get(j)));
+                    cells[i][j].setText(String.valueOf(rowData.get(j)));
                 }
             }
         }
     }
-
+     // Update UC3 hàm xóa board
     // Xóa board
     public void clearBoard() {
-
         for (int i = 0; i < 9; i++) {
-
             for (int j = 0; j < 9; j++) {
-
                 cells[i][j].setText("");
-
                 cells[i][j].setEditable(true);
-
                 cells[i][j].setForeground(Color.BLACK);
-
                 cells[i][j].setBackground(Color.WHITE);
             }
         }
@@ -477,8 +459,9 @@ public class SudokuFrame extends JFrame {
         return selectedCol;
     }
 
-
-
+    public String getSelectedLevel() {
+        return (String) cblevel.getSelectedItem();
+    }
     public JButton getBtnGenerate() {
         return btnGenerate;
     }
@@ -486,7 +469,9 @@ public class SudokuFrame extends JFrame {
     public JButton getBtnReset() {
         return btnReset;
     }
-    public JButton getBtnUndo(){return btnUndo; }
+    public JButton getBtnUndo(){
+        return btnUndo;
+    }
 
     public JButton getBtnHint() {
         return btnHint;
