@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/test/SudokuAutomationTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/test/SudokuAutomationTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +89,13 @@
       <updated>1778492032839</updated>
       <workItem from="1778651382452" duration="4431000" />
       <workItem from="1778772970362" duration="2107000" />
+      <workItem from="1778788535679" duration="899000" />
+      <workItem from="1778834826204" duration="108000" />
+      <workItem from="1778838815783" duration="41000" />
+      <workItem from="1778838887831" duration="46000" />
+      <workItem from="1779257680418" duration="78000" />
+      <workItem from="1779266627061" duration="364000" />
+      <workItem from="1780295123681" duration="74000" />
     </task>
     <servers />
   </component>
