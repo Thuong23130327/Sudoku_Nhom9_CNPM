@@ -1,12 +1,15 @@
 package com.sudoku.controller;
 
+import com.sudoku.model.SudokuBoard;
 import com.sudoku.model.SudokuEngine;
 import com.sudoku.model.SudokuGenerator;
 import com.sudoku.model.SudokuLogic;
 import com.sudoku.utils.TimerUtils;
 import com.sudoku.view.SudokuFrame;
+import com.sudoku.model.Move;
 
 import javax.swing.*;
+import java.util.Stack;
 
 public class SudokuController {
     private SudokuFrame view;
@@ -15,27 +18,23 @@ public class SudokuController {
     private SudokuLogic logic;
     private InputHandler inputHandler;
     private int[][] currentMatrix;
-
+    private int[][] previousValues = new int[9][9];
     private TimerUtils gameTimer;
     private boolean isPaused = false;
-
+    private Stack<Move> undoStack = new Stack<>();
+    private Stack<Move> redoStack = new Stack<>();
     private int mistakeCount = 0;
     private final int MAX_MISTAKES = 3;
     private GameController gameController; // UR-5: Quản lý trạng thái tập trung
-
-
-
     private int hintCount = 0;
     private final int MAX_HINT = 3;
 
     public SudokuController(SudokuFrame view) {
         this.view = view;
-
         // Khởi tạo các thành phần Model
         this.engine = new SudokuEngine();
         this.generator = new SudokuGenerator();
         this.logic = new SudokuLogic();
-
         this.gameTimer = new TimerUtils(view.getLblTimer());
         this.gameController = new GameController(3); // 3 = MAX_MISTAKES
         // [3.1.2] Khởi tạo InputHandler — validate realtime mỗi lần nhập số
@@ -55,7 +54,8 @@ public class SudokuController {
             currentMatrix = new int[9][9];
             for (int i = 0; i < 9; i++)
                 System.arraycopy(newBoard[i], 0, currentMatrix[i], 0, 9);
-
+            undoStack.clear();
+            redoStack.clear();
             // Nạp ngay solution chuẩn vào engine từ đầu để tránh lỗi tô đỏ toàn bảng khi tiếp tục
             engine.setSolution(generator.getSolution());
 
@@ -106,9 +106,33 @@ public class SudokuController {
                 view.updateStatus("Chưa có ván đấu nào để làm mới!");
             }
         });
+        // Phát triển UC3 :
+        view.getBtnUndo().addActionListener(e -> undoMove());
 
+        view.getRootPane()
+                .getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke("control Z"), "undo");
 
+        view.getRootPane()
+                .getActionMap()
+                .put("undo", new AbstractAction() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent e) {
+                        undoMove();
+                    }
+                });
+        view.getRootPane()
+                .getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                .put(KeyStroke.getKeyStroke("control Y"), "redo");
 
+        view.getRootPane()
+                .getActionMap()
+                .put("redo", new AbstractAction() {
+                    @Override
+                    public void actionPerformed(java.awt.event.ActionEvent e) {
+                        redoMove();
+                    }
+                });
 
         // 3. Xử lý nút Hint hỗ trợ điền
         view.getBtnHint().addActionListener(e -> {
@@ -148,22 +172,51 @@ public class SudokuController {
             for (int j = 0; j < 9; j++) {
                 final int row = i;
                 final int col = j;
+                view.getCell(row, col).addFocusListener(
+                        new java.awt.event.FocusAdapter() {
 
-                view.getCell(row, col).addKeyListener(new java.awt.event.KeyAdapter() {
-                    @Override
-                    public void keyReleased(java.awt.event.KeyEvent e) {
-                        if (!gameController.isPlaying()) return; // UR-5.2: Block input khi pause/gameover
-                        // [UR-4.3]
-                        // Highlight lại các ô cùng số
-                        view.highlightSameNumbers();
-                        // [UR-4.4]
-                        // Kiểm tra lỗi Sudoku
-                        checkBoardErrors();
+                            @Override
+                            public void focusGained(
+                                    java.awt.event.FocusEvent e) {
 
-                        // (UR-5.4) - Để tính số lỗi Mistakes
-                        handleUserInput(row, col);
-                    }
-                });
+                                String text =
+                                        view.getCell(row, col).getText();
+
+                                previousValues[row][col] =
+                                        text.isEmpty()
+                                                ? 0
+                                                : Integer.parseInt(text);
+                            }
+                        }
+                );
+                view.getCell(row, col).addKeyListener(
+                        new java.awt.event.KeyAdapter() {
+                            @Override
+                            public void keyReleased(
+                                    java.awt.event.KeyEvent e) {
+                                if (!gameController.isPlaying())
+                                    return;
+
+                                String text = view.getCell(row, col).getText();
+
+                                int newValue = text.isEmpty() ? 0 : Integer.parseInt(text);
+
+                                int oldValue = previousValues[row][col];
+
+                                if (oldValue != newValue) {
+                                    undoStack.push(new Move(row, col, oldValue, newValue)
+                                    );
+                                    redoStack.clear();
+                                    previousValues[row][col] =
+                                            newValue;
+                                }
+
+                                view.highlightSameNumbers();
+                                checkBoardErrors();
+                                handleUserInput(row, col);
+                            }
+                        }
+                );
             }
         }
 
@@ -267,8 +320,6 @@ public class SudokuController {
             }
         }
     }
-
-
 
     private void giveHint() {
         // [UR-4.2]
@@ -534,5 +585,66 @@ public class SudokuController {
             // Tự động tạo ván mới
             view.getBtnGenerate().doClick();
         }
+    }
+    private void undoMove() {
+        if (undoStack.isEmpty()) {
+            view.updateStatus("Không có thao tác nào để hoàn tác!");
+            return;
+        }
+
+        Move move = undoStack.pop();
+        redoStack.push(move); // Lưu lại để có thể Redo
+
+        // 1. Cập nhật giao diện
+        view.setCellValue(move.getRow(), move.getCol(), move.getOldValue());
+
+        // 2. Cập nhật mảng đồng bộ giá trị cũ
+        previousValues[move.getRow()][move.getCol()] = move.getOldValue();
+
+        // 3. ĐỒNG BỘ LẠI LỖI TRONG GAMECONTROLLER (Rất quan trọng)
+        // Nếu giá trị cũ là 0 hoặc bằng đáp án, reset tracking lỗi của ô này
+        int[][] solution = engine.getSolution();
+        if (move.getOldValue() == 0 || (solution != null && move.getOldValue() == solution[move.getRow()][move.getCol()])) {
+            gameController.recordMistake(move.getRow(), move.getCol(), 0);
+        } else if (solution != null && move.getOldValue() != solution[move.getRow()][move.getCol()]) {
+            // Nếu giá trị lùi lại vẫn là một giá trị sai, ghi nhận lại giá trị sai đó
+            gameController.recordMistake(move.getRow(), move.getCol(), move.getOldValue());
+        }
+
+        // Cập nhật lại số lỗi hiển thị UI
+        mistakeCount = gameController.getMistakeCount();
+        view.updateMistakeUI(mistakeCount, gameController.getMaxMistakes());
+
+        // 4. Làm mới giao diện kiểm tra
+        view.highlightSameNumbers();
+
+        // Xóa toàn bộ highlight lỗi cũ trước khi quét lại (Tránh việc ô đã sửa vẫn bị đỏ)
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                view.highlightErrorCell(r, c, false); // Giả định hàm có param boolean, hoặc tùy UI của bạn
+            }
+        }
+        checkBoardErrors();
+
+        view.updateStatus("Đã hoàn tác!");
+    }
+
+    private void redoMove() {
+        if (redoStack.isEmpty()) {
+            view.updateStatus("Không có thao tác nào để làm lại!");
+            return;
+        }
+
+        Move move = redoStack.pop();
+        undoStack.push(move); // Đẩy lại vào undo
+
+        view.setCellValue(move.getRow(), move.getCol(), move.getNewValue());
+        previousValues[move.getRow()][move.getCol()] = move.getNewValue();
+
+        view.highlightSameNumbers();
+        checkBoardErrors();
+        handleUserInput(move.getRow(), move.getCol()); // Kiểm tra thắng/thua/lỗi cho giá trị mới này
+
+        view.updateStatus("Đã làm lại (Redo)!");
     }
 }

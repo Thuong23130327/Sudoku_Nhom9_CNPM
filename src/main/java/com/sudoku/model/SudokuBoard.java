@@ -1,4 +1,5 @@
 package com.sudoku.model;
+import java.util.Stack;
 
 /**
  * [MODEL] Cấu trúc dữ liệu dùng chung cho toàn dự án.
@@ -13,6 +14,8 @@ public class SudokuBoard {
     
     // Ma trận 9x9 chứa đáp án hoàn chỉnh (dùng cho Hint và Check Win) [3.2.4, 4.1]
     private int[][] solutionMatrix;
+    private Stack<Move> undoStack = new Stack<>();
+    private Stack<Move> redoStack = new Stack<>();
 
     public SudokuBoard() {
         this.currentMatrix = new int[9][9];
@@ -20,8 +23,6 @@ public class SudokuBoard {
         this.solutionMatrix = new int[9][9];
     }
 
-    // --- GETTERS & SETTERS ---
-    
     public int getValueAt(int row, int col) {
         return currentMatrix[row][col];
     }
@@ -48,6 +49,61 @@ public class SudokuBoard {
         return solutionMatrix[row][col];
     }
 
+    public boolean makeMove(int row, int col, int newValue) {
 
-    // Các bạn phụ trách UC-01, UC-03 sẽ viết thêm logic vào đây
-}
+        if (isFixed[row][col]) {
+            return false;
+        }
+
+        int oldValue = currentMatrix[row][col];
+
+        if (oldValue == newValue) {
+            return false;
+        }
+
+        undoStack.push(
+                new Move(row, col, oldValue, newValue)
+        );
+
+        redoStack.clear();
+
+        currentMatrix[row][col] = newValue;
+
+        return true;
+    }
+    public boolean undo() {
+
+        if (undoStack.isEmpty()) {
+            return false;
+        }
+
+        Move move = undoStack.pop();
+
+        currentMatrix[move.getRow()][move.getCol()]
+                = move.getOldValue();
+
+        redoStack.push(move);
+
+        return true;
+    }
+    public boolean redo() {
+
+        if (redoStack.isEmpty()) {
+            return false;
+        }
+
+        Move move = redoStack.pop();
+
+        currentMatrix[move.getRow()][move.getCol()]
+                = move.getNewValue();
+
+        undoStack.push(move);
+
+        return true;
+    }
+    public int[][] getBoard(){
+        return currentMatrix;
+
+    }
+
+    }
