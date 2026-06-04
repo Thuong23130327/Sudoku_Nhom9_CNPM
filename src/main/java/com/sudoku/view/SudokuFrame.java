@@ -108,15 +108,7 @@ public class SudokuFrame extends JFrame {
                         }
                     }
                 });
-                cells[i][j].addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        selectedRow = r; // Dùng r thay vì i
-                        selectedCol = c; // Dùng c thay vì j
-                        cells[r][c].requestFocusInWindow();
-                        highlightSameNumbers();
-                    }
-                });
+                // (Block MouseListener trùng lặp đã được gỡ bỏ — logic chọn ô nằm ở UR-2.1 phía trên)
                 // ===========================================================================
                 // UR-2.5: Hệ thống phải hỗ trợ người dùng chuyển đổi giữa các ô bằng các phím mũi tên trên bàn phím.
                 // ===========================================================================
