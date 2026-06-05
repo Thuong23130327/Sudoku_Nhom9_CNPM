@@ -103,6 +103,12 @@ public class SudokuFrame extends JFrame {
                 cells[i][j].addKeyListener(new java.awt.event.KeyAdapter() {
                     @Override
                     public void keyTyped(java.awt.event.KeyEvent e) {
+                        // Block input nếu game đang Pause (isEnabled = false) hoặc Game Over/Ô đề bài (isEditable = false)
+                        if (!cells[r][c].isEditable() || !cells[r][c].isEnabled()) {
+                            e.consume();
+                            return;
+                        }
+
                         char charKey = e.getKeyChar();
 
                         // Chỉ cho phép nhập số 1-9
@@ -119,6 +125,9 @@ public class SudokuFrame extends JFrame {
 
                     @Override
                     public void keyReleased(java.awt.event.KeyEvent e) {
+                        if (!cells[r][c].isEditable() || !cells[r][c].isEnabled()) {
+                            return;
+                        }
                         highlightSameNumbers();
                     }
                 });
@@ -129,6 +138,11 @@ public class SudokuFrame extends JFrame {
                 cells[i][j].addKeyListener(new java.awt.event.KeyAdapter() {
                     @Override
                     public void keyPressed(java.awt.event.KeyEvent e) {
+                        // Khóa điều hướng nếu game đang Pause
+                        if (!cells[r][c].isEnabled()) {
+                            return;
+                        }
+                        
                         int code = e.getKeyCode();
                         if (code == java.awt.event.KeyEvent.VK_UP ||
                                 code == java.awt.event.KeyEvent.VK_DOWN ||
