@@ -1,5 +1,10 @@
 package com.sudoku.model;
 
+/*
+    UC-5.6: Xem lịch sử các lần chơi
+    Class này dùng để tạo model đổ dữ liệu xuống file .json
+    Người thực hiện: Nguyễn Thanh Tú
+ */
 public class GameMatch {
     private String date;
     private String level;

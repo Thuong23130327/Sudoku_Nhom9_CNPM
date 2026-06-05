@@ -464,6 +464,7 @@ public class SudokuFrame extends JFrame {
 
 
     /*
+    UC-5.6: Xem lịch sử các lần chơi
     Hàm dùng để ẩn các nút chức năng trên giao diện khi đang "Tạm dừng"
     Nâng cấp cho phiên bản trước đó: vẫn hiển thị các nút chức năng khác như Tạo mới, Làm mới dẫn đến lỗi
     Người thực hiện: Nguyễn Thanh Tú

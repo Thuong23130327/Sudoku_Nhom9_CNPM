@@ -13,6 +13,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+    UC-5.6: Xem lịch sử các lần chơi
+    Class này tạo cửa sổ giao diện, đọc file history.json bằng Gson và hiển thị bảng lịch sử các lần chơi của người chơi
+    Người thực hiện: Nguyễn Thanh Tú
+ */
 public class HistoryFrame extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;

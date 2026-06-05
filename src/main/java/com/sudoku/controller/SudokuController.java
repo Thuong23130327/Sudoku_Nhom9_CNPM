@@ -49,10 +49,11 @@ public class SudokuController {
         // UR-1.1: Xử lý nút "Tạo Mới" (Tích hợp phân chia cấp độ chơi)
         // ==========================================================
         view.getBtnGenerate().addActionListener(e -> {
-            // ===========================================================================
-            // CHỈNH SỬA PHẦN 1: KIỂM TRA TRẠNG THÁI GAME ĐANG CHẠY ĐỂ HỎI XÁC NHẬN & LƯU LỊCH SỬ
-            // ===========================================================================
-            // Điều kiện: Game thực sự đang chạy (isGameRunning == true) và trận đấu chưa kết thúc (chưa GameOver)
+            /*
+                Update cho nút "Tạo mới", kiểm tra trạng thái game để xác nhận và lưu lịch sử lượt chơi
+                Thêm Điều kiện: Game thực sự đang chạy (isGameRunning == true) và trận đấu chưa kết thúc (chưa GameOver)
+                Người thực hiện: Nguyễn Thanh Tú
+            */
             if (isGameRunning && !gameController.isGameOver()) {
                 int confirm = JOptionPane.showConfirmDialog(
                         view,
@@ -70,7 +71,6 @@ public class SudokuController {
                 // Nếu người chơi chọn YES -> Tiến hành ghi nhận trận này là Thua (Bỏ cuộc) vào lịch sử
                 saveMatchToHistory("Thua (Bỏ cuộc)");
             }
-
 
 
             engine.stop();
@@ -148,9 +148,7 @@ public class SudokuController {
             gameTimer.reset();
             gameTimer.start();
 
-            // ===========================================================================
-            // CHỈNH SỬA PHẦN 2: ĐÁNH DẤU CỜ HIỆU GAME CHÍNH THỨC BẮT ĐẦU CHẠY
-            // ===========================================================================
+            //ĐÁNH DẤU CỜ HIỆU GAME CHÍNH THỨC BẮT ĐẦU CHẠY
             isGameRunning = true;
         });
 
@@ -302,7 +300,11 @@ public class SudokuController {
                 view.updateStatus("Không tìm thấy giải pháp khả thi cho trạng thái bảng này.");
             }
         });
-
+        /*
+            UC-5.6: Xem lịch sử các lần chơi
+            Xử lý Sự kiện nút "Xem Lịch Sử" (btnHistory):
+            Người thực hiện: Nguyễn Thanh Tú
+        */
         view.getBtnHistory().addActionListener(e -> {
             // Mở cửa sổ lịch sử độc lập
             HistoryFrame historyWindow = new HistoryFrame();
@@ -459,6 +461,12 @@ public class SudokuController {
         triggerGameOver(true);
     }
 
+    /*
+        Update hàm cho UC-5.6: Xem lịch sử các lần chơi
+        Thêm biến isGameRunning = false, đánh dấu trận đấu kết thúc ngay lập tức
+        Khi người dùng chiến thắng hoặc thua cuộc (do quá lỗi) thì gọi hàm saveMatchToHistory lưu lại trạng thái tương ứng
+        Người thực hiện: Nguyễn Thanh Tú
+     */
     private void triggerGameOver(boolean won) {
         gameTimer.stop();
         String time = gameTimer.getTimeString();
@@ -469,9 +477,7 @@ public class SudokuController {
 
         view.getBtnPause().setEnabled(false);
 
-        // ===========================================================================
-        // BƯỚC 1: HẠ CỜ HIỆU VÀ LƯU LỊCH SỬ CHÍNH XÁC VÀO FILE JSON
-        // ===========================================================================
+
         isGameRunning = false; // Đánh dấu trận đấu kết thúc ngay lập tức
 
         if (won) {
@@ -540,8 +546,12 @@ public class SudokuController {
 
         view.updateStatus("Đã thực hiện lại (Redo) hành động.");
     }
-
-    // Hàm phụ trách ghi trận đấu vào file JSON (Dùng chung cho cả Thắng, Thua, Bỏ cuộc)
+    /*
+        UC-5.6: Xem lịch sử các lần chơi
+        Thêm hàm phụ trách ghi trận đấu vào file JSON (Dùng chung cho cả Thắng, Thua, Bỏ cuộc)
+        Khi người dùng chiến thắng hoặc thua cuộc thì gọi hàm saveMatchToHistory lưu lại trạng thái tương ứng
+        Người thực hiện: Nguyễn Thanh Tú
+    */
     private void saveMatchToHistory(String outcome) {
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String currentDate = sdf.format(new java.util.Date());
