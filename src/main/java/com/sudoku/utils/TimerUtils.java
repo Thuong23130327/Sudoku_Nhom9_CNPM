@@ -41,5 +41,9 @@ public class TimerUtils {
     public String getTimeString() {
         return labelToUpdate.getText();
     }
+
+    public int getSeconds() {
+        return this.secondsElapsed;
+    }
 }
 

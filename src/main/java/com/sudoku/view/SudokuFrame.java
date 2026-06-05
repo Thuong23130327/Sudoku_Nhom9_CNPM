@@ -26,6 +26,7 @@ public class SudokuFrame extends JFrame {
 
     private JLabel lblMistakes;
 
+    private JButton btnHistory; // Thêm nút xem lịch sử
     // Lưu ô đang được chọn
     private int selectedRow = -1;
     private int selectedCol = -1;
@@ -182,6 +183,7 @@ public class SudokuFrame extends JFrame {
         btnShowSolution = new JButton("Xem Giải Pháp");
         lblStatus = new JLabel("Sẵn sàng!");
         lblLevels = new JLabel("Levels");
+        btnHistory = new JButton("Xem Lịch Sử");
         //Time:
 
         lblTimer = new JLabel("Thời gian: 00:00");
@@ -203,6 +205,7 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(btnUndo);
         pnlControl.add(lblLevels);
         pnlControl.add(cblevel);
+        pnlControl.add(btnHistory);
         add(pnlControl, BorderLayout.SOUTH);
     }
 
@@ -525,4 +528,6 @@ public class SudokuFrame extends JFrame {
 
         return cells[row][col];
     }
+
+    public JButton getBtnHistory() { return btnHistory; }
 }
