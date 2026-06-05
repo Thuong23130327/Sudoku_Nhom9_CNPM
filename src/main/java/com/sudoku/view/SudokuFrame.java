@@ -69,6 +69,10 @@ public class SudokuFrame extends JFrame {
 
                     @Override
                     public void mouseClicked(MouseEvent e) {
+                        // Chỉ cho phép chọn ô trống (ô có thể chỉnh sửa)
+                        if (!cells[r][c].isEditable()) {
+                            return;
+                        }
 
                         selectedRow = r;
                         selectedCol = c;
@@ -77,20 +81,20 @@ public class SudokuFrame extends JFrame {
                         highlightSameNumbers();
                     }
                 });
-                //Sự kiện khi người dùng chọn vào 1 ô thì ô đó sẽ hiện lên màu xanh lá cây để nhận biết:
+                //Sự kiện khi người dùng chọn vào 1 ô thì ô đó sẽ được highlight đồng bộ:
                 cells[i][j].addFocusListener(new java.awt.event.FocusAdapter() {
                     public void focusGained(java.awt.event.FocusEvent evt) {
-                        JTextField source = (JTextField)evt.getSource();
-                        source.setBackground(new Color(0, 255, 0)); // Xanh lá cây khi chọn
+                        if (!cells[r][c].isEditable()) {
+                            return;
+                        }
+                        selectedRow = r;
+                        selectedCol = c;
+                        highlightSameNumbers();
                     }
                     public void focusLost(java.awt.event.FocusEvent evt) {
-                        JTextField source = (JTextField)evt.getSource();
-                        // Trả lại màu cũ tùy theo ô đó là đề bài hay ô trống
-                        if (!source.isEditable()) {
-                            source.setBackground(new Color(230, 230, 230));
-                        } else {
-                            source.setBackground(Color.WHITE);
-                        }
+                        selectedRow = -1;
+                        selectedCol = -1;
+                        resetCellColors();
                     }
                 });
                 // =============================================================
@@ -111,6 +115,11 @@ public class SudokuFrame extends JFrame {
                         if (cells[r][c].getText().length() >= 1) {
                             cells[r][c].setText("");
                         }
+                    }
+
+                    @Override
+                    public void keyReleased(java.awt.event.KeyEvent e) {
+                        highlightSameNumbers();
                     }
                 });
                 // (Block MouseListener trùng lặp đã được gỡ bỏ — logic chọn ô nằm ở UR-2.1 phía trên)
@@ -357,8 +366,9 @@ public class SudokuFrame extends JFrame {
         String value =
                 cells[selectedRow][selectedCol].getText();
 
-        // Nếu ô trống thì không highlight
+        // Nếu ô trống thì chỉ highlight focus
         if (value.isEmpty()) {
+            cells[selectedRow][selectedCol].setBackground(new Color(173, 216, 230)); // Xanh nhạt focus
             return;
         }
 
@@ -366,10 +376,6 @@ public class SudokuFrame extends JFrame {
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
-
-                // Nếu là ô đang focus thì không đè màu vàng lên
-                if (cells[i][j].isFocusOwner()) continue;
-
                 if (cells[i][j].getText().equals(value)) {
                     cells[i][j].setBackground(new Color(255, 255, 150)); // Màu vàng highlight
                 }
@@ -388,16 +394,12 @@ public class SudokuFrame extends JFrame {
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
-                // Nếu ô này đang có focus thì KHÔNG reset màu (để giữ màu xanh)
-                if (cells[i][j].isFocusOwner()) {
-                    continue;
-                }
-
                 if (cells[i][j].isEditable()) {
                     cells[i][j].setBackground(Color.WHITE);
                 } else {
                     cells[i][j].setBackground(new Color(230, 230, 230));
-                }            }
+                }
+            }
         }
     }
 
