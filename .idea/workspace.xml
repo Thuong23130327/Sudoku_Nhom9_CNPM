@@ -1,100 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ArtifactsWorkspaceSettings">
-    <artifacts-to-build>
-      <artifact name="Sudoku_Nhom9_CNPM:jar" />
-    </artifacts-to-build>
-  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="Merge branch 'main' of https://github.com/Thuong23130327/Sudoku_Nhom9_CNPM&#10;# Please enter a commit message to explain why this merge is necessary,&#10;# especially if it merges an updated upstream into a topic branch.&#10;#&#10;# Lines starting with '#' will be ignored, and an empty message aborts&#10;# the commit.">
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/Main.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/controller/GameController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/controller/InputHandler$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/controller/InputHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/controller/SudokuController$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/controller/SudokuController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/Difficulty.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/Gene.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/Individual.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/Population.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/SudokuBoard.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/SudokuEngine.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/SudokuGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/SudokuLogic.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/model/Utility.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/utils/FileHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/utils/TimerUtils.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/view/SudokuFrame$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/com/sudoku/view/SudokuFrame.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/GameController$GameState.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/GameController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/CellPosition.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/Difficulty.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/Gene.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/Individual.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/Population.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuEngine.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuHight.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/Utility.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/test/SudokuAutomationTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/test/SudokuTestData.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/test/SudokuTestHight.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/utils/FileHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/utils/TimerUtils.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/GridPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/MainFrame.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$3.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$4.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$5.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Sudoku_Nhom9_CNPM.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Sudoku_Nhom9_CNPM.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/bin/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuLogic.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuLogic.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/InputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.class" beforeDir="false" />
+    <list default="true" id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/Move.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Move.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/Sudoku_Nhom9_CNPM_jar/Sudoku_Nhom9_CNPM.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/Sudoku_Nhom9_CNPM_jar/Sudoku_Nhom9_CNPM.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Gene.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Gene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Gene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Individual.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Individual.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Individual.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Population.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Population.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Population.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuEngine.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuHight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuHight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuLogic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/Utility.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/test/SudokuAutomationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/test/SudokuAutomationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/test/SudokuLogicTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/test/SudokuLogicTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/test/SudokuTestData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/test/SudokuTestData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/utils/TimerUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/utils/TimerUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -106,52 +29,44 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
+    &quot;lastFilter&quot;: {
     &quot;state&quot;: &quot;OPEN&quot;,
     &quot;assignee&quot;: &quot;22130223-NguyenThanhPhuoc&quot;
-  }
-}</component>
+    }
+    }</component>
   <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Thuong23130327/Sudoku_Nhom9_CNPM.git&quot;,
     &quot;accountId&quot;: &quot;77726f4b-1b5a-43df-80d4-a984efead678&quot;
-  }
-}</component>
+    }
+    }</component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1
-}</component>
+    &quot;associatedIndex&quot;: 1
+    }</component>
   <component name="ProjectId" id="3DZaQrw7IrDp9YZFrVBTF5acEUj" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "JUnit.SudokuAutomationTest.executor": "Run",
-    "JUnit.SudokuLogicTest.executor": "Run",
-    "JUnit.SudokuTestHight.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "Thuong",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.18717048",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
-  }
-}]]></component>
+  <component name="PropertiesComponent">{
+    &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Thuong&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+    }
+    }</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -169,8 +84,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.138" />
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.28238.7" />
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-IU-252.28238.7" />
       </set>
     </attachedChunks>
   </component>
@@ -183,7 +98,17 @@
       <updated>1778492032839</updated>
       <workItem from="1778651382452" duration="4431000" />
       <workItem from="1778772970362" duration="2107000" />
-      <workItem from="1779801294029" duration="6000" />
+      <workItem from="1778788535679" duration="899000" />
+      <workItem from="1778834826204" duration="108000" />
+      <workItem from="1778838815783" duration="41000" />
+      <workItem from="1778838887831" duration="46000" />
+      <workItem from="1779257680418" duration="78000" />
+      <workItem from="1779266627061" duration="364000" />
+      <workItem from="1780295123681" duration="1261000" />
+      <workItem from="1780313856764" duration="46000" />
+      <workItem from="1780314763679" duration="372000" />
+      <workItem from="1780315276152" duration="28000" />
+      <workItem from="1780662191616" duration="984000" />
     </task>
     <servers />
   </component>
