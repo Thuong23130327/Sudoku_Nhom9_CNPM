@@ -183,7 +183,8 @@ public class SudokuController {
                 gameController.resumeGame();
                 gameTimer.start();
                 view.setCellsVisible(true);
-                setInputEnabled(true);
+                //setInputEnabled(true);
+                view.setGameplayButtonsEnabled(true); // Update: Gọi hàm mới từ View để mở khóa các nút
                 view.highlightSameNumbers();
                 checkBoardErrors();
                 view.getBtnPause().setText("Tạm dừng");
@@ -192,7 +193,8 @@ public class SudokuController {
                 gameController.pauseGame();
                 gameTimer.stop();
                 view.setCellsVisible(false);
-                setInputEnabled(false);
+                //setInputEnabled(false);
+                view.setGameplayButtonsEnabled(false); // Update: Gọi hàm mới từ View để ẩn các nút chức năng khác
                 view.getBtnPause().setText("Tiếp tục");
                 view.updateStatus("Đang tạm dừng...");
             }

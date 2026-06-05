@@ -452,11 +452,34 @@ public class SudokuFrame extends JFrame {
             }
         }
     }
+
+
     //Hàm cập nhật số lần điền sai
     public void updateMistakeUI(int current, int max) {
         lblMistakes.setText("Lỗi: " + current + "/" + max);
     }
 
+
+    /*
+    Hàm dùng để ẩn các nút chức năng trên giao diện khi đang "Tạm dừng"
+    Nâng cấp cho phiên bản trước đó: vẫn hiển thị các nút chức năng khác như Tạo mới, Làm mới dẫn đến lỗi
+    Người thực hiện: Nguyễn Thanh Tú
+     */
+    public void setGameplayButtonsEnabled(boolean enabled) {
+        btnGenerate.setEnabled(enabled);
+        btnReset.setEnabled(enabled);
+        btnHint.setEnabled(enabled);
+        btnUndo.setEnabled(enabled);
+        btnShowSolution.setEnabled(enabled);
+        cblevel.setEnabled(enabled);
+
+        // Vô hiệu hóa hoặc kích hoạt tương tác trên các ô lưới
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                cells[i][j].setEnabled(enabled);
+            }
+        }
+    }
 
     // Getter ô đang chọn
     public int getSelectedRow() {
