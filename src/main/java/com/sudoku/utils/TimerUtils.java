@@ -1,7 +1,6 @@
 package com.sudoku.utils;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 
 public class TimerUtils {
     private Timer timer;

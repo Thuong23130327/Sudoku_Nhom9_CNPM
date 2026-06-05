@@ -1,6 +1,5 @@
 package com.sudoku.model;
 
-import java.util.ArrayList;
 import java.util.*;
 
 public class Individual implements Comparable<Individual>{

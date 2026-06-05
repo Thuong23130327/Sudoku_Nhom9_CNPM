@@ -1,16 +1,19 @@
 package com.sudoku.controller;
 
-import javax.swing.*;
-
 import com.sudoku.model.SudokuEngine;
 import com.sudoku.model.SudokuGenerator;
+import com.sudoku.model.SudokuLogic;
 import com.sudoku.utils.TimerUtils;
 import com.sudoku.view.SudokuFrame;
+
+import javax.swing.*;
 
 public class SudokuController {
     private SudokuFrame view;
     private SudokuEngine engine;
     private SudokuGenerator generator;
+    private SudokuLogic logic;
+    private InputHandler inputHandler;
     private int[][] currentMatrix;
 
     private TimerUtils gameTimer;
@@ -18,9 +21,9 @@ public class SudokuController {
 
     private int mistakeCount = 0;
     private final int MAX_MISTAKES = 3;
+    private GameController gameController; // UR-5: Quản lý trạng thái tập trung
 
-    // Biến dùng để theo dõi trạng thái đang chạy hay đang dừng
-    private boolean isRunning = false;
+
 
     private int hintCount = 0;
     private final int MAX_HINT = 3;
@@ -31,8 +34,12 @@ public class SudokuController {
         // Khởi tạo các thành phần Model
         this.engine = new SudokuEngine();
         this.generator = new SudokuGenerator();
+        this.logic = new SudokuLogic();
 
         this.gameTimer = new TimerUtils(view.getLblTimer());
+        this.gameController = new GameController(3); // 3 = MAX_MISTAKES
+        // [3.1.2] Khởi tạo InputHandler — validate realtime mỗi lần nhập số
+        this.inputHandler = new InputHandler(view, logic);
         // Gắn sự kiện cho các nút bấm
         initController();
     }
@@ -42,53 +49,53 @@ public class SudokuController {
         // UR-1.1: Xử lý nút "Tạo Mới" (Generate Game)
         // ==========================================================
         view.getBtnGenerate().addActionListener(e -> {
-            if (isRunning) stop(); // Nếu đang giải thì không cho bấm
+            engine.stop();
 
-            // Xóa ngẫu nhiên 40 ô để tạo currentMatrix
             int[][] newBoard = generator.generate(40);
-
-            // Khởi tạo và lưu lại bản sao của đề bài vào currentMatrix
             currentMatrix = new int[9][9];
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 9; i++)
                 System.arraycopy(newBoard[i], 0, currentMatrix[i], 0, 9);
-            }
 
-            // setBoardData sẽ tự động cấu hình isFixedCell = true (setEditable = false)
+            // Nạp ngay solution chuẩn vào engine từ đầu để tránh lỗi tô đỏ toàn bảng khi tiếp tục
+            engine.setSolution(generator.getSolution());
+
             view.setBoardData(currentMatrix);
-            view.updateStatus("Đã tạo mới (ẩn 40 ô). Nhấn Giải để bắt đầu.");
-            hintCount = 0; // Reset biến đếm về 0 (đã dùng 0 lượt)
-            view.updateHintUI(MAX_HINT, MAX_HINT); // Hiển thị lại 3/3
-
-            mistakeCount = 0; // Quan trọng: Reset số lỗi
-            view.updateMistakeUI(0, MAX_MISTAKES);
-            view.updateStatus("Ván mới bắt đầu!");
-
+            hintCount = 0;
+            view.updateHintUI(MAX_HINT, MAX_HINT);
             engine.setOnGenerationEvolved(null);
 
-            // BẮT BUỘC: Chạy Engine ngầm để có Solution ngay từ đầu
+            // UR-5.1 + UR-5.4: Reset trạng thái game và số lỗi cho ván mới
+            gameController.startGame();
+            view.updateMistakeUI(0, gameController.getMaxMistakes());
+            view.updateStatus("Ván mới bắt đầu!");
+
+            // THÊM: Mở lại các nút phòng trường hợp ván trước đang pause/gameover
+            view.getBtnPause().setEnabled(true);
+            view.getBtnPause().setText("Tạm dừng");
+            view.setCellsVisible(true);
+
             new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() {
-                    engine.solve(currentMatrix); // Giải dựa trên đề bài mới tạo
+                    engine.solve(currentMatrix);
                     return null;
                 }
+
                 @Override
                 protected void done() {
-                    view.updateStatus("Ván chơi đã sẵn sàng (Đáp án đã được lưu ngầm)!");
+                    view.updateStatus("Ván chơi đã sẵn sàng!");
                 }
             }.execute();
-            // UR-5.1: Bắt đầu bộ đếm thời gian
+
+            // UR-5.1: Reset timer và bắt đầu đếm
             gameTimer.reset();
             gameTimer.start();
-
-
         });
 
         // ==========================================================
         // UR-1.2: Xử lý nút "Làm Mới" (Reset Game)
         // ==========================================================
         view.getBtnReset().addActionListener(e -> {
-            if (isRunning) return;
 
             if (currentMatrix != null) {
                 // Đưa mảng gốc vào lại, hàm setBoardData sẽ đè lại giao diện,
@@ -102,89 +109,154 @@ public class SudokuController {
 
 
 
-        // 2. Xử lý nút "Tự Nhập / Xóa"
-        view.getBtnClear().addActionListener(e -> {
 
-            if (isRunning) return;
-
-            view.clearBoard();
-
-            // Reset hint
-            hintCount = 0;
-
-            view.updateStatus("Mời bạn nhập đề sudoku...");
-        });
-
-        // 3. Xử lý nút "GIẢI / DỪNG"
-        view.getBtnSolve().addActionListener(e -> {
-
-            if (isRunning) {
-                stop();
-            } else {
-                // Kiểm tra xem đã có đáp án giải ngầm từ lúc Tạo mới chưa
-                int[][] sol = engine.getSolution();
-
-                if (sol != null) {
-                    // Nếu đã có đáp án, hiển thị ngay lập tức (Instant Solve)
-                    displaySolutionToView(sol);
-                    view.updateStatus("Đã hiển thị đáp án chuẩn!");
-                } else {
-                    // Nếu chưa có (Engine ngầm chưa xong), thì mới chạy hiệu ứng giải
-                    start();
-                }
-            }
-        });
-
-        // 4. Xử lý nút Hint hỗ trợ điền
+        // 3. Xử lý nút Hint hỗ trợ điền
         view.getBtnHint().addActionListener(e -> {
-
-            if (isRunning) return;
 
             giveHint();
         });
+
         // UR-5.2 & UR-5.3: Xử lý Tạm dừng/Tiếp tục
         view.getBtnPause().addActionListener(e -> {
-            if (isPaused) {
-                gameTimer.start();
-                view.setCellsVisible(true);
+            if (gameController.isGameOver()) return; // Không cho pause khi game kết thúc
+            if (!gameController.isPlaying() && !gameController.isPaused()) return;
+
+            if (gameController.isPaused()) {
+                // UR-5.3 RESUME
+                gameController.resumeGame();
+                gameTimer.start();           // Tiếp tục đếm thời gian
+                view.setCellsVisible(true);  // Hiện lại bàn cờ
+                setInputEnabled(true);       // Mở khóa nhập liệu
+                view.highlightSameNumbers(); // Làm mới lại màu highlight khi tiếp tục
+                checkBoardErrors();          // Làm mới lại các ô lỗi
                 view.getBtnPause().setText("Tạm dừng");
+                view.updateStatus("Tiếp tục chơi!");
             } else {
-                gameTimer.stop();
-                view.setCellsVisible(false);
+                // UR-5.2 PAUSE
+                gameController.pauseGame();
+                gameTimer.stop();            // Dừng timer
+                view.setCellsVisible(false); // Ẩn bàn cờ
+                setInputEnabled(false);      // Khóa nhập liệu
                 view.getBtnPause().setText("Tiếp tục");
+                view.updateStatus("Đang tạm dừng...");
             }
-            isPaused = !isPaused;
         });
+
         // [UR-4.4]
         // Kiểm tra lỗi realtime khi nhập
         for (int i = 0; i < 9; i++) {
-
             for (int j = 0; j < 9; j++) {
-
                 final int row = i;
                 final int col = j;
 
-                view.getCell(row, col)
-                        .addKeyListener(new java.awt.event.KeyAdapter() {
+                view.getCell(row, col).addKeyListener(new java.awt.event.KeyAdapter() {
+                    @Override
+                    public void keyReleased(java.awt.event.KeyEvent e) {
+                        if (!gameController.isPlaying()) return; // UR-5.2: Block input khi pause/gameover
+                        // [UR-4.3]
+                        // Highlight lại các ô cùng số
+                        view.highlightSameNumbers();
+                        // [UR-4.4]
+                        // Kiểm tra lỗi Sudoku
+                        checkBoardErrors();
 
-                            @Override
-                            public void keyReleased(
-                                    java.awt.event.KeyEvent e) {
-                                // [UR-4.3]
-                                // Highlight lại các ô cùng số
-                                view.highlightSameNumbers();
-                                // [UR-4.4]
-                                // Kiểm tra lỗi Sudoku
-                                checkBoardErrors();
-
-                                // (UR-5.4) - Để tính số lỗi Mistakes
-                                handleUserInput(row, col);
-                            }
-                        });
+                        // (UR-5.4) - Để tính số lỗi Mistakes
+                        handleUserInput(row, col);
+                    }
+                });
             }
         }
 
+        // ==========================================================
+        // [3.1.5] Xử lý nút Kiểm Tra (đã ẩn khỏi UI, logic chuyển sang realtime)
+        // ==========================================================
+        /*
+        view.getBtnValidate().addActionListener(e -> {
+            if (isRunning) return;
+
+            int[][] board = view.getBoardData();
+            boolean[][] errors = logic.validateWholeBoard(board);
+            boolean hasError = false;
+
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    if (errors[r][c]) {
+                        hasError = true;
+                        view.highlightErrorCell(r, c, true);
+                    } else {
+                        view.highlightErrorCell(r, c, false);
+                    }
+                }
+            }
+
+            if (hasError) {
+                view.updateStatus("Có lỗi trên bảng! (Các ô màu đỏ vi phạm luật)");
+            } else {
+                if (logic.isBoardComplete(board)) {
+                    view.updateStatus("Chúc mừng! Bạn đã giải xong Sudoku một cách hợp lệ!");
+                } else {
+                    view.updateStatus("Bảng hợp lệ. Hãy tiếp tục giải!");
+                }
+            }
+        });
+        */
+
+        // ==========================================================
+        // [3.2.1] ~ [3.2.6] Xử lý nút Xem Giải Pháp (Auto-Solver Backtracking)
+        // ==========================================================
+        view.getBtnShowSolution().addActionListener(e -> {
+
+            int[][] board = view.getBoardData();
+
+            // [3.2.3] Validate toàn bảng trước khi giải
+            boolean[][] errors = logic.validateWholeBoard(board);
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    if (errors[r][c]) {
+                        view.updateStatus("Lỗi! Bảng hiện tại sai luật, không thể giải.");
+                        view.highlightErrorCell(r, c, true);
+                        return;
+                    }
+                }
+            }
+
+            view.updateStatus("Đang giải bằng Backtracking...");
+
+            // [3.2.4] Giải bằng Backtracking
+            boolean solved = logic.solveSudoku(board);
+
+            if (solved) {
+                // [3.2.5] Hiển thị giải pháp lên giao diện
+                view.setBoardData(board);
+                view.updateStatus("Đã giải xong bằng thuật toán Backtracking!");
+            } else {
+                view.updateStatus("Không tìm thấy giải pháp cho bảng này.");
+            }
+        });
     }
+
+    // UR-5.2 & UR-5.3: Khóa/Mở toàn bộ ô nhập liệu khi Pause/Resume
+    private void setInputEnabled(boolean enabled) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                // Khi pause: disable tất cả
+                // Khi resume: chỉ mở lại các ô người chơi được phép nhập (ô trống trong đề bài)
+                if (!enabled) {
+                    view.getCell(i, j).setEnabled(false);
+                } else {
+                    // Mở lại toàn bộ ô để khôi phục màu sắc ban đầu (không bị xám)
+                    // (các ô đề bài đã được setEditable(false) từ trước nên người chơi vẫn không thể sửa)
+                    view.getCell(i, j).setEnabled(true);
+                }
+            }
+        }
+        // Disable các nút trong lúc pause
+        view.getBtnHint().setEnabled(enabled);
+        // view.getBtnValidate().setEnabled(enabled);
+        view.getBtnShowSolution().setEnabled(enabled);
+        view.getBtnReset().setEnabled(enabled);
+    }
+
     private void displaySolutionToView(int[][] sol) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -195,93 +267,14 @@ public class SudokuController {
             }
         }
     }
-    private void start() {
 
-        // BƯỚC 1: Lấy dữ liệu từ giao diện
-        // (bao gồm cả số người dùng tự nhập)
-        int[][] inputBoard = view.getBoardData();
 
-        // BƯỚC 2: Format lại giao diện
-        // Dòng này sẽ biến các số người dùng vừa nhập
-        // thành màu XANH (Blue/Gray)
-        // và KHÓA lại (setEditable=false)
-        // giống như đề bài ngẫu nhiên.
-        view.setBoardData(inputBoard);
-
-        // BƯỚC 3: Cấu hình Engine
-        // để cập nhật giao diện khi chạy
-        engine.setOnGenerationEvolved(ind -> {
-
-            SwingUtilities.invokeLater(() -> {
-
-                view.updateBoardFromIndividual(ind);
-
-                view.updateStatus(
-                        "Fitness: "
-                                + ind.getFitness()
-                                + "/162 | Gen: đang chạy...");
-            });
-        });
-
-        // Cập nhật trạng thái nút bấm
-        isRunning = true;
-
-        view.getBtnSolve().setText("DỪNG");
-
-        view.getBtnGenerate().setEnabled(false);
-        view.getBtnClear().setEnabled(false);
-
-        // Disable Hint khi đang solve
-        view.getBtnHint().setEnabled(false);
-
-        // BƯỚC 4: Chạy thuật toán trên luồng riêng
-        // (SwingWorker)
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-
-            @Override
-            protected Void doInBackground() throws Exception {
-
-                // Hàm này sẽ chạy tốn thời gian
-                engine.solve(inputBoard);
-
-                return null;
-            }
-
-            @Override
-            protected void done() {
-
-                // Kết thúc:tìm thành công hoặc bị dừng
-                stop();
-
-                view.updateStatus("Thành công hoặc đã dừng!");
-            }
-        };
-
-        worker.execute();
-    }
-
-    private void stop() {
-
-        engine.stop(); // Gửi lệnh dừng vào Model
-
-        isRunning = false;
-
-        // Reset lại giao diện nút bấm
-        view.getBtnSolve().setText("GIẢI (Start)");
-
-        view.getBtnGenerate().setEnabled(true);
-        view.getBtnClear().setEnabled(true);
-
-        // Enable lại Hint
-        view.getBtnHint().setEnabled(true);
-    }
 
     private void giveHint() {
         // [UR-4.2]
         // Kiểm tra số lần sử dụng Hint đã đạt giới hạn chưa
         if (hintCount >= MAX_HINT) {
-            view.updateStatus("Bạn đã hết lượt gợi ý!");
-            view.updateHintUI(0, MAX_HINT);
+            view.updateStatus("Đã hết lượt Hint!");
             return;
         }
         // [UR-4.1]
@@ -342,13 +335,16 @@ public class SudokuController {
                     view.updateHintUI(remaining, MAX_HINT);
                     // [UR-4.2]
                     // Hiển thị số lượt Hint đã dùng
-                    view.updateStatus("Đã dùng gợi ý! Còn " + remaining + " lượt.");
+                    view.updateStatus(
+                            "Đã dùng Hint: "
+                                    + hintCount + "/" + MAX_HINT);
 
-                    // Dừng engine ngầm sau khi đã lấy được hint
-                    engine.stop();
                 });
             }
         });
+
+        // Hiển thị thông báo đang tìm gợi ý cho người dùng biết
+        view.updateStatus("Hệ thống đang tìm gợi ý cho ô [" + (row + 1) + "," + (col + 1) + "]...");
 
         // Chạy Engine ngầm để tìm đáp án
         new SwingWorker<Void, Void>() {
@@ -359,6 +355,7 @@ public class SudokuController {
             }
         }.execute();
     }
+
     // [UR-4.4]
     // Kiểm tra ô có vi phạm luật Sudoku không
     private boolean isInvalid(
@@ -406,8 +403,9 @@ public class SudokuController {
 
         return false;
     }
+
     //[UR-4.4]
-//Kiểm tra toàn bộ board và highlight lỗi
+    //Kiểm tra toàn bộ board và highlight lỗi
     private void checkBoardErrors() {
 
         int[][] board = view.getBoardData();
@@ -445,62 +443,96 @@ public class SudokuController {
             }
         }
     }
+
     //[UR-4.4]
-//Refresh lại lỗi sau khi click ô
+    //Refresh lại lỗi sau khi click ô
     public void refreshErrors() {
 
         checkBoardErrors();
     }
 
     private void handleUserInput(int row, int col) {
+        if (!gameController.isPlaying()) return; // UR-5.2: Block khi pause
+
         int[][] board = view.getBoardData();
         int value = board[row][col];
-
-        if (value == 0) return; // Ô trống thì không tính lỗi
-
         int[][] solution = engine.getSolution();
-        if (solution == null) {
-            // Nếu chưa có đáp án ngầm, có thể Engine đang giải, hãy nhắc người dùng
+        if (solution == null) return;
+
+        if (value == 0) {
+            // Người chơi xóa ô → reset tracking
+            gameController.recordMistake(row, col, 0);
             return;
         }
 
         if (value != solution[row][col]) {
-            mistakeCount++;
-            view.updateMistakeUI(mistakeCount, MAX_MISTAKES);
-
             // Bạn có thể thêm thông báo status để người chơi biết
-            view.updateStatus("Sai rồi! Ô [" + (row+1) + "," + (col+1) + "] phải là số khác.");
+            // Sai: chỉ tính lỗi nếu là giá trị sai MỚI (GameController chống trùng)
+            boolean isNewMistake = gameController.recordMistake(row, col, value);
+            if (isNewMistake) {
+                mistakeCount = gameController.getMistakeCount();
+                view.updateMistakeUI(mistakeCount, gameController.getMaxMistakes());
+                view.updateStatus("Sai rồi! Ô [" + (row + 1) + "," + (col + 1) + "] cần kiểm tra lại.");
 
-            if (mistakeCount >= MAX_MISTAKES) {
-                gameOver(false); // UR-5.5: Thông báo Thua
+                // UR-5.5: Kiểm tra thua
+                // UR-5.5: Thông báo Thua
+                if (gameController.isGameLost()) {
+                    gameController.setLost();
+                    triggerGameOver(false);
+                }
             }
         } else {
+            // Đúng: reset tracking ô này
+            gameController.recordMistake(row, col, 0);
             // Nếu đúng, kiểm tra xem đã điền hết bàn cờ chưa
+            // UR-5.5: Kiểm tra thắng
             checkWinCondition(board, solution);
         }
     }
+
     private void checkWinCondition(int[][] currentBoard, int[][] solution) {
         if (solution == null) return;
-
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 // Nếu có ô trống hoặc ô sai so với đáp án -> Chưa thắng
+                // Còn ô chưa đúng → chưa thắng
                 if (currentBoard[i][j] == 0 || currentBoard[i][j] != solution[i][j]) {
                     return;
                 }
             }
         }
         // Nếu vượt qua vòng lặp -> Tất cả các ô đều đúng
-        gameOver(true);
+        // Tất cả đúng và đủ → Thắng
+        gameController.setWon();
+        triggerGameOver(true);
     }
-    private void gameOver(boolean won) {
+
+    // UR-5.5: Xử lý kết thúc game (Win hoặc Lose)
+    private void triggerGameOver(boolean won) {
+        // Dừng timer
         gameTimer.stop();
         String time = gameTimer.getTimeString();
+
+        // Khóa toàn bộ bàn cờ
+        for (int i = 0; i < 9; i++)
+            for (int j = 0; j < 9; j++)
+                view.getCell(i, j).setEditable(false);
+
+        // Disable nút Pause vì game đã kết thúc
+        view.getBtnPause().setEnabled(false);
+
         if (won) {
-            JOptionPane.showMessageDialog(view, "CHÚC MỪNG! Bạn đã thắng!\n" + time);
+            // UR-5.5 WIN
+            JOptionPane.showMessageDialog(view,
+                    "🎉 CHÚC MỪNG! Bạn đã hoàn thành Sudoku!\n" + time,
+                    "CHIẾN THẮNG", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(view, "GAME OVER! Bạn đã phạm 3 lỗi.\n" + time);
-            view.getBtnGenerate().doClick(); // Tự động tạo ván mới
+            // UR-5.5 LOSE
+            JOptionPane.showMessageDialog(view,
+                    "💀 GAME OVER! Bạn đã phạm " + gameController.getMaxMistakes() + " lỗi.\n" + time,
+                    "THUA CUỘC", JOptionPane.ERROR_MESSAGE);
+            // Tự động tạo ván mới
+            view.getBtnGenerate().doClick();
         }
     }
 }

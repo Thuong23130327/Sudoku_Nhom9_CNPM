@@ -13,8 +13,10 @@ public class SudokuFrame extends JFrame {
 
     private JTextField[][] cells = new JTextField[9][9];
 
-    private JButton btnSolve, btnGenerate, btnClear, btnReset;
+    private JButton btnGenerate, btnReset;
     private JButton btnHint;
+    private JButton btnValidate; // [3.1.5] Nút Kiểm tra toàn bảng (đã ẩn khỏi UI)
+    private JButton btnShowSolution; // [3.2.1] Nút Xem giải pháp (Auto-Solver)
     private JLabel lblStatus, lblHintCount;
 
     private JLabel lblTimer;
@@ -161,13 +163,13 @@ public class SudokuFrame extends JFrame {
 
         btnGenerate = new JButton("Tạo Mới");
 
-        btnClear = new JButton("Tự Nhập / Xóa");
         btnReset = new JButton("Làm Mới");
         btnHint = new JButton("Gợi ý (Chọn 1 ô)");
         lblHintCount = new JLabel("Gợi ý: 3/3");
         lblHintCount.setForeground(new Color(0, 128, 0)); // Màu xanh lá đậm
         lblHintCount.setFont(new Font("Arial", Font.BOLD, 14));
-        btnSolve = new JButton("GIẢI");
+        btnValidate = new JButton("Kiểm Tra");
+        btnShowSolution = new JButton("Xem Giải Pháp");
         lblStatus = new JLabel("Sẵn sàng!");
 
         //Time:
@@ -179,10 +181,10 @@ public class SudokuFrame extends JFrame {
 
         pnlControl.add(btnGenerate);
         pnlControl.add(btnReset);
-        pnlControl.add(btnClear);
         pnlControl.add(btnHint);
         pnlControl.add(lblHintCount);
-        pnlControl.add(btnSolve);
+        // pnlControl.add(btnValidate); // Bỏ nút Kiểm tra theo yêu cầu
+        pnlControl.add(btnShowSolution);
         pnlControl.add(lblStatus);
         pnlControl.add(btnPause);
         pnlControl.add(lblTimer);
@@ -274,7 +276,7 @@ public class SudokuFrame extends JFrame {
 
                 } else {
                     // =================================================================
-                    // UR-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
+                    // UC-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
                     // =================================================================
                     cells[i][j].setText("");
 
@@ -438,6 +440,23 @@ public class SudokuFrame extends JFrame {
                         new Color(255, 120, 120));
     }
 
+    // [3.1.4] Highlight ô bị lỗi (sai luật Sudoku) — phản hồi trực quan cho người chơi
+    public void highlightErrorCell(int row, int col, boolean isError) {
+        if (isError) {
+            cells[row][col].setForeground(Color.RED);
+            cells[row][col].setBackground(new Color(255, 200, 200));
+        } else {
+            // Trả lại màu bình thường nếu không phải là đề bài
+            if (cells[row][col].isEditable()) {
+                cells[row][col].setForeground(Color.BLACK);
+                cells[row][col].setBackground(Color.WHITE);
+            } else {
+                cells[row][col].setForeground(Color.BLUE);
+                cells[row][col].setBackground(new Color(230, 230, 230));
+            }
+        }
+    }
+
     // Hàm ẩn/hiện bàn cờ khi Pause (UR-5.2)
     public void setCellsVisible(boolean visible) {
         for (int i = 0; i < 9; i++) {
@@ -461,10 +480,7 @@ public class SudokuFrame extends JFrame {
         return selectedCol;
     }
 
-    // Getter cho các nút
-    public JButton getBtnSolve() {
-        return btnSolve;
-    }
+
 
     public JButton getBtnGenerate() {
         return btnGenerate;
@@ -474,12 +490,17 @@ public class SudokuFrame extends JFrame {
         return btnReset;
     }
 
-    public JButton getBtnClear() {
-        return btnClear;
-    }
 
     public JButton getBtnHint() {
         return btnHint;
+    }
+
+    public JButton getBtnValidate() {
+        return btnValidate;
+    }
+
+    public JButton getBtnShowSolution() {
+        return btnShowSolution;
     }
 
     public JLabel getLblTimer() { return lblTimer; }

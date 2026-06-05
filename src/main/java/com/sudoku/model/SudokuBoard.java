@@ -11,7 +11,7 @@ public class SudokuBoard {
     // Ma trận 9x9 chứa đề bài gốc (để không cho phép xóa/sửa) [UR-2.4]
     private boolean[][] isFixed;
     
-    // Ma trận 9x9 chứa đáp án hoàn chỉnh (dùng cho Hint và Check Win) [UR-3.3, 4.1]
+    // Ma trận 9x9 chứa đáp án hoàn chỉnh (dùng cho Hint và Check Win) [3.2.4, 4.1]
     private int[][] solutionMatrix;
 
     public SudokuBoard() {
