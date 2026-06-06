@@ -218,34 +218,70 @@ public class SudokuFrame extends JFrame {
 
     }
     // Hàm tạo giao diện Bàn phím ảo giống Numpad
+    // -------------------------------------------------------------------------
+    // HÀM TẠO GIAO DIỆN BÀN PHÍM ẢO (ĐÃ ĐƯỢC LÀM ĐẸP)
+    // -------------------------------------------------------------------------
     private JPanel createVirtualKeyboard() {
-        // Tạo panel với lưới 4 hàng x 3 cột (giống bàn phím điện thoại)
-        JPanel pnlKeyboard = new JPanel(new GridLayout(4, 3, 5, 5));
+
+        JPanel pnlKeyboard = new JPanel(new GridLayout(4, 3, 10, 10));
+
+        // Trang trí viền bao quanh bàn phím đẹp hơn
         pnlKeyboard.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder("Bàn phím"),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(150, 150, 150), 1, true),
+                        " Bàn Phím Ảo ",
+                        0, 0,
+                        new Font("Arial", Font.BOLD, 14),
+                        new Color(80, 80, 80)
+                ),
+                BorderFactory.createEmptyBorder(20, 20, 20, 20)
         ));
+
+        // Fix kích thước để bàn phím không bị méo khi kéo giãn cửa sổ
+        pnlKeyboard.setPreferredSize(new Dimension(280, 0));
+
+        Font btnFont = new Font("Segoe UI", Font.BOLD, 26); // Font chữ hiện đại
 
         // Khởi tạo các nút từ 1 đến 9
         for (int i = 1; i <= 9; i++) {
             btnNumbers[i] = new JButton(String.valueOf(i));
-            btnNumbers[i].setFont(new Font("Arial", Font.BOLD, 24));
-            btnNumbers[i].setFocusable(false); // Không cướp focus của ô lưới
+            styleVirtualButton(btnNumbers[i], btnFont, new Color(245, 245, 245), new Color(50, 50, 50));
             pnlKeyboard.add(btnNumbers[i]);
         }
 
         // Hàng cuối cùng: Trống - Nút Xóa (0) - Trống
         pnlKeyboard.add(new JLabel("")); // Ô trống góc dưới trái
 
-        btnNumbers[0] = new JButton("X");
-        btnNumbers[0].setFont(new Font("Arial", Font.BOLD, 24));
-        btnNumbers[0].setForeground(Color.RED);
-        btnNumbers[0].setFocusable(false);
+        btnNumbers[0] = new JButton("⌫"); // Dùng icon backspace thay vì chữ X
+        styleVirtualButton(btnNumbers[0], btnFont, new Color(255, 220, 220), new Color(200, 0, 0)); // Màu đỏ nhạt
         pnlKeyboard.add(btnNumbers[0]);
 
         pnlKeyboard.add(new JLabel("")); // Ô trống góc dưới phải
 
         return pnlKeyboard;
+    }
+
+    // -------------------------------------------------------------------------
+    // HÀM HỖ TRỢ TRANG TRÍ NÚT BẤM (CSS-like cho Java Swing)
+    // -------------------------------------------------------------------------
+    private void styleVirtualButton(JButton btn, Font font, Color bgColor, Color fgColor) {
+        btn.setFont(font);
+        btn.setBackground(bgColor);
+        btn.setForeground(fgColor);
+        btn.setFocusPainted(false);
+        btn.setFocusable(false);
+        btn.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                // Làm tối màu nền đi một chút khi hover
+                btn.setBackground(bgColor.darker());
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                // Trả lại màu cũ khi chuột dời đi
+                btn.setBackground(bgColor);
+            }
+        });
     }
 
     // Hàm lấy nút bấm để Controller gọi sự kiện
