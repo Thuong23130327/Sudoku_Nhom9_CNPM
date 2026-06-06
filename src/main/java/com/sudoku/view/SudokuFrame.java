@@ -28,7 +28,11 @@ public class SudokuFrame extends JFrame {
 
     private JLabel lblMistakes;
 
-    private JButton btnHistory; // Thêm nút xem lịch sử
+    private JButton btnHistory;
+
+    //Mảng chứa 10 nút bấm của Bàn phím ảo (0-9)
+    private JButton[] btnNumbers = new JButton[10];
+
     // Lưu ô đang được chọn
     private int selectedRow = -1;
     private int selectedCol = -1;
@@ -186,7 +190,9 @@ public class SudokuFrame extends JFrame {
         lblStatus = new JLabel("Sẵn sàng!");
         lblLevels = new JLabel("Levels");
         btnHistory = new JButton("Xem Lịch Sử");
+
         //Time:
+
         lblTimer = new JLabel("Thời gian: 00:00");
         btnPause = new JButton("Tạm dừng");
         //Tính số lần sai:
@@ -226,9 +232,45 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(btnHistory);
         pnlControl.add(btnNote);
         add(pnlControl, BorderLayout.SOUTH);
+        JPanel pnlKeyboard = createVirtualKeyboard();
+        add(pnlKeyboard, BorderLayout.EAST);
 
     }
+    // Hàm tạo giao diện Bàn phím ảo giống Numpad
+    private JPanel createVirtualKeyboard() {
+        // Tạo panel với lưới 4 hàng x 3 cột (giống bàn phím điện thoại)
+        JPanel pnlKeyboard = new JPanel(new GridLayout(4, 3, 5, 5));
+        pnlKeyboard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder("Bàn phím"),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
 
+        // Khởi tạo các nút từ 1 đến 9
+        for (int i = 1; i <= 9; i++) {
+            btnNumbers[i] = new JButton(String.valueOf(i));
+            btnNumbers[i].setFont(new Font("Arial", Font.BOLD, 24));
+            btnNumbers[i].setFocusable(false); // Không cướp focus của ô lưới
+            pnlKeyboard.add(btnNumbers[i]);
+        }
+
+        // Hàng cuối cùng: Trống - Nút Xóa (0) - Trống
+        pnlKeyboard.add(new JLabel("")); // Ô trống góc dưới trái
+
+        btnNumbers[0] = new JButton("X");
+        btnNumbers[0].setFont(new Font("Arial", Font.BOLD, 24));
+        btnNumbers[0].setForeground(Color.RED);
+        btnNumbers[0].setFocusable(false);
+        pnlKeyboard.add(btnNumbers[0]);
+
+        pnlKeyboard.add(new JLabel("")); // Ô trống góc dưới phải
+
+        return pnlKeyboard;
+    }
+
+    // Hàm lấy nút bấm để Controller gọi sự kiện
+    public JButton getVirtualButton(int number) {
+        return btnNumbers[number];
+    }
     //Hàm xử lý cho phép người chơi dùng phím mũi tên di chuyển giữa các ô
     public void moveFocus(int currentRow, int currentCol, int keyCode) {
         int nextR = currentRow;
@@ -484,6 +526,7 @@ public class SudokuFrame extends JFrame {
 
 
     /*
+    UC-5.6: Xem lịch sử các lần chơi
     Hàm dùng để ẩn các nút chức năng trên giao diện khi đang "Tạm dừng"
     Nâng cấp cho phiên bản trước đó: vẫn hiển thị các nút chức năng khác như Tạo mới, Làm mới dẫn đến lỗi
     Người thực hiện: Nguyễn Thanh Tú
@@ -552,4 +595,6 @@ public class SudokuFrame extends JFrame {
     }
 
     public JButton getBtnHistory() { return btnHistory; }
+
+
 }
