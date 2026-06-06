@@ -24,6 +24,8 @@ public class SudokuFrame extends JFrame {
     private JLabel lblTimer , lblLevels;
     private JButton btnPause;
 
+    private JToggleButton btnNote;
+
     private JLabel lblMistakes;
 
     private JButton btnHistory; // Thêm nút xem lịch sử
@@ -185,12 +187,28 @@ public class SudokuFrame extends JFrame {
         lblLevels = new JLabel("Levels");
         btnHistory = new JButton("Xem Lịch Sử");
         //Time:
-
         lblTimer = new JLabel("Thời gian: 00:00");
         btnPause = new JButton("Tạm dừng");
         //Tính số lần sai:
         lblMistakes = new JLabel("Lỗi: 0/3");
         lblMistakes.setForeground(Color.RED);
+
+        /*
+            Thêm nút chức năng Ghi chú (Note) lên giao diện, thêm sự kiện khi người dùng nhấn vào nút Ghi chú,
+            hiển thị trạng thái Bật/Tắt của chế độ Ghi chú
+         */
+        //Note ghi chú:
+        btnNote = new JToggleButton("Ghi Chú: TẮT");
+        btnNote.setFont(new Font("Arial", Font.BOLD, 12));
+        btnNote.addActionListener(e -> {
+            if (btnNote.isSelected()) {
+                btnNote.setText("Ghi Chú: BẬT");
+                btnNote.setBackground(Color.ORANGE); // Đổi màu để nhận biết đang bật mode note
+            } else {
+                btnNote.setText("Ghi Chú: TẮT");
+                btnNote.setBackground(null);
+            }
+        });
 
         pnlControl.add(btnGenerate);
         pnlControl.add(btnReset);
@@ -206,7 +224,9 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(lblLevels);
         pnlControl.add(cblevel);
         pnlControl.add(btnHistory);
+        pnlControl.add(btnNote);
         add(pnlControl, BorderLayout.SOUTH);
+
     }
 
     //Hàm xử lý cho phép người chơi dùng phím mũi tên di chuyển giữa các ô
@@ -464,7 +484,6 @@ public class SudokuFrame extends JFrame {
 
 
     /*
-    UC-5.6: Xem lịch sử các lần chơi
     Hàm dùng để ẩn các nút chức năng trên giao diện khi đang "Tạm dừng"
     Nâng cấp cho phiên bản trước đó: vẫn hiển thị các nút chức năng khác như Tạo mới, Làm mới dẫn đến lỗi
     Người thực hiện: Nguyễn Thanh Tú
@@ -522,6 +541,8 @@ public class SudokuFrame extends JFrame {
 
     public JLabel getLblTimer() { return lblTimer; }
     public JButton getBtnPause() { return btnPause; }
+
+    public JToggleButton getBtnNote() { return btnNote; }
 
     public JTextField getCell(
             int row,

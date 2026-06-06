@@ -12,11 +12,19 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+
+/*
+    Unit Test cho UC-5.6: Xem lịch sử các lần chơi
+    Test này tập trung vào kiểm thử xem Model GameMatch hoạt động đúng không và file JSON có lưu đúng định dạng dữ liệu hay không.
+    Sử dụng thư viện JUnit4 để tiến hành kiểm thử
+    Người viết Test: Nguyễn Thanh Tú
+ */
+
 public class SudokuGameMatchTest {
     private final String TEST_FILE_NAME = "history_test.json";
     private Gson gson;
 
-    // JUnit 4 dùng @Before (thay vì @BeforeEach của JUnit 5)
+
     @Before
     public void setUp() {
         gson = new Gson();

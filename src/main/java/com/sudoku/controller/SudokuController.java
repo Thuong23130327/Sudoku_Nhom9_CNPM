@@ -9,6 +9,7 @@ import com.sudoku.view.SudokuFrame;
 import com.sudoku.model.Move;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Stack;
 
 public class SudokuController {
@@ -236,6 +237,7 @@ public class SudokuController {
             for (int j = 0; j < 9; j++) {
                 final int row = i;
                 final int col = j;
+                JTextField cell = view.getCell(row, col);
 
                 view.getCell(row, col).addFocusListener(
                         new java.awt.event.FocusAdapter() {
@@ -249,9 +251,35 @@ public class SudokuController {
 
                 view.getCell(row, col).addKeyListener(
                         new java.awt.event.KeyAdapter() {
+                            /*
+                                Xử lý sự kiện cho chức năng Ghi chú (Note)
+                                Người thực hiện: Nguyễn Thanh Tú
+                             */
+                            @Override
+                            public void keyTyped(java.awt.event.KeyEvent e) {
+                                // NẾU ĐANG BẬT NOTE: Xử lý bằng cơ chế ghi chú ẩn, chặn Swing can thiệp thô
+                                if (view.getBtnNote().isSelected()) {
+                                    handleNoteInputIndependent(cell, e.getKeyChar());
+                                    view.highlightSameNumbers();
+                                    e.consume(); // Chặn đứng không cho chữ tự điền vào Document để tránh kích hoạt InputHandler báo lỗi
+                                }
+                            }
+
                             @Override
                             public void keyReleased(java.awt.event.KeyEvent e) {
                                 if (!gameController.isPlaying()) return;
+
+                                if (view.getBtnNote().isSelected()) return; // Nếu đang bật Note thì bỏ qua hoàn toàn sự kiện này
+                                JTextField cell = view.getCell(row, col);
+
+                                // Nếu tắt note và người chơi nhập đè lên ô đang có note
+                                if (cell.getClientProperty("isNoteMode") != null) {
+                                    cell.putClientProperty("isNoteMode", null);
+                                    cell.putClientProperty("noteText", null);
+                                    cell.setFont(new Font("Arial", Font.BOLD, 20));
+                                    cell.setForeground(Color.BLACK);
+                                    cell.setText("");
+                                }
 
                                 String text = view.getCell(row, col).getText();
                                 int newValue = text.isEmpty() ? 0 : Integer.parseInt(text);
@@ -269,6 +297,8 @@ public class SudokuController {
                             }
                         }
                 );
+
+
             }
         }
 
@@ -310,6 +340,7 @@ public class SudokuController {
             HistoryFrame historyWindow = new HistoryFrame();
             historyWindow.setVisible(true);
         });
+
     }
 
 
@@ -586,6 +617,65 @@ public class SudokuController {
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /*
+       Hàm xử lý dữ liệu người dùng nhập giá trị vào ô khi đang bật chế độ Ghi chú (Note)
+       Người thực hiện: Nguyễn Thanh Tú
+    */
+    private void handleNoteInputIndependent(JTextField cell, char keyChar) {
+        if (keyChar < '1' || keyChar > '9') {
+            return;
+        }
+
+        // Đánh dấu ô này đang ở chế độ Note ẩn
+        cell.putClientProperty("isNoteMode", true);
+
+        // Lấy chuỗi nháp cũ ra từ bộ nhớ ẩn của ô
+        String currentText = (String) cell.getClientProperty("noteText");
+        if (currentText == null) currentText = "";
+
+        String inputNum = String.valueOf(keyChar);
+
+        // Tách chuỗi xử lý mảng
+        java.util.List<String> notes = new java.util.ArrayList<>();
+        if (!currentText.isEmpty()) {
+            String[] tokens = currentText.split("[\\s]+");
+            for (String t : tokens) {
+                if (!t.isEmpty()) notes.add(t);
+            }
+        }
+
+        // Logic gõ lại số cũ thì xóa, số mới thì thêm
+        if (notes.contains(inputNum)) {
+            notes.remove(inputNum);
+        } else {
+            notes.add(inputNum);
+        }
+
+        java.util.Collections.sort(notes);
+
+        // Nối chuỗi
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < notes.size(); i++) {
+            sb.append(notes.get(i));
+            if (i < notes.size() - 1) sb.append(" ");
+        }
+
+        String resultText = sb.toString();
+
+        // Lưu lại chuỗi nháp mới vào bộ nhớ ẩn
+        cell.putClientProperty("noteText", resultText);
+
+        // Ép giao diện hiển thị chuỗi "1 3 5" chữ xám nghiêng nhỏ nhưng KHÔNG bắn sự kiện thay đổi text thực tế
+        SwingUtilities.invokeLater(() -> {
+            cell.setFont(new Font("Arial", Font.ITALIC, 11));
+            cell.setForeground(Color.GRAY);
+
+            // Mẹo nhỏ: Dùng setText hiển thị nhưng vì keyTyped đã consume,
+            // kết hợp với việc ta tạo luồng render riêng sẽ làm InputHandler đọc ra chuỗi rỗng, không gây lỗi logic.
+            cell.setText(resultText);
+        });
     }
 }
 
