@@ -310,6 +310,31 @@ public class SudokuController {
             HistoryFrame historyWindow = new HistoryFrame();
             historyWindow.setVisible(true);
         });
+        // Bắt sự kiện click cho Bàn phím ảo
+        for (int i = 0; i <= 9; i++) {
+            final int value = i; // value = 0 là Xóa, 1-9 là điền số
+
+            view.getVirtualButton(i).addActionListener(e -> {
+                int r = view.getSelectedRow();
+                int c = view.getSelectedCol();
+
+                // Nếu đã chọn 1 ô và ô đó có thể chỉnh sửa
+                if (r != -1 && c != -1 && view.getCell(r, c).isEditable()) {
+                    JTextField cell = view.getCell(r, c);
+                    if (value == 0) {
+                        cell.setText(""); // Xóa
+                    } else {
+                        cell.setText(String.valueOf(value)); // Điền số
+                    }
+
+                    // Ép ô vừa nhập nhận diện sự thay đổi và tự động highlight
+                    cell.requestFocus();
+                    view.highlightSameNumbers();
+
+                    // Bạn có thể gọi thêm các hàm check lỗi ở đây (giống như InputHandler)
+                }
+            });
+        }
     }
 
 
