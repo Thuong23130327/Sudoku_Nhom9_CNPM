@@ -24,6 +24,8 @@ public class SudokuFrame extends JFrame {
     private JLabel lblTimer , lblLevels;
     private JButton btnPause;
 
+    private JToggleButton btnNote;
+
     private JLabel lblMistakes;
 
     private JButton btnHistory;
@@ -36,13 +38,11 @@ public class SudokuFrame extends JFrame {
     private int selectedCol = -1;
 
     public SudokuFrame() {
-
         setTitle("Sudoku");
         setSize(1100, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         // BÀN CỜ
-
         JPanel pnlBoard = new JPanel(new GridLayout(9, 9));
 
         pnlBoard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -190,6 +190,7 @@ public class SudokuFrame extends JFrame {
         lblStatus = new JLabel("Sẵn sàng!");
         lblLevels = new JLabel("Levels");
         btnHistory = new JButton("Xem Lịch Sử");
+
         //Time:
 
         lblTimer = new JLabel("Thời gian: 00:00");
@@ -197,6 +198,23 @@ public class SudokuFrame extends JFrame {
         //Tính số lần sai:
         lblMistakes = new JLabel("Lỗi: 0/3");
         lblMistakes.setForeground(Color.RED);
+
+        /*
+            Thêm nút chức năng Ghi chú (Note) lên giao diện, thêm sự kiện khi người dùng nhấn vào nút Ghi chú,
+            hiển thị trạng thái Bật/Tắt của chế độ Ghi chú
+         */
+        //Note ghi chú:
+        btnNote = new JToggleButton("Ghi Chú: TẮT");
+        btnNote.setFont(new Font("Arial", Font.BOLD, 12));
+        btnNote.addActionListener(e -> {
+            if (btnNote.isSelected()) {
+                btnNote.setText("Ghi Chú: BẬT");
+                btnNote.setBackground(Color.ORANGE); // Đổi màu để nhận biết đang bật mode note
+            } else {
+                btnNote.setText("Ghi Chú: TẮT");
+                btnNote.setBackground(null);
+            }
+        });
 
         pnlControl.add(btnGenerate);
         pnlControl.add(btnReset);
@@ -212,6 +230,7 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(lblLevels);
         pnlControl.add(cblevel);
         pnlControl.add(btnHistory);
+        pnlControl.add(btnNote);
         add(pnlControl, BorderLayout.SOUTH);
         JPanel pnlKeyboard = createVirtualKeyboard();
         add(pnlKeyboard, BorderLayout.EAST);
@@ -565,6 +584,8 @@ public class SudokuFrame extends JFrame {
 
     public JLabel getLblTimer() { return lblTimer; }
     public JButton getBtnPause() { return btnPause; }
+
+    public JToggleButton getBtnNote() { return btnNote; }
 
     public JTextField getCell(
             int row,
