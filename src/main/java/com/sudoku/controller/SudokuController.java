@@ -4,6 +4,7 @@ import com.sudoku.model.SudokuEngine;
 import com.sudoku.model.SudokuGenerator;
 import com.sudoku.model.SudokuLogic;
 import com.sudoku.utils.TimerUtils;
+import com.sudoku.view.HistoryFrame;
 import com.sudoku.view.SudokuFrame;
 import com.sudoku.model.Move;
 
@@ -25,6 +26,7 @@ public class SudokuController {
     private GameController gameController;
     private int hintCount = 0;
     private final int MAX_HINT = 3;
+    private boolean isGameRunning = false;
 
     public SudokuController(SudokuFrame view) {
         this.view = view;
@@ -47,6 +49,30 @@ public class SudokuController {
         // UR-1.1: Xử lý nút "Tạo Mới" (Tích hợp phân chia cấp độ chơi)
         // ==========================================================
         view.getBtnGenerate().addActionListener(e -> {
+            /*
+                Update cho nút "Tạo mới", kiểm tra trạng thái game để xác nhận và lưu lịch sử lượt chơi
+                Thêm Điều kiện: Game thực sự đang chạy (isGameRunning == true) và trận đấu chưa kết thúc (chưa GameOver)
+                Người thực hiện: Nguyễn Thanh Tú
+            */
+            if (isGameRunning && !gameController.isGameOver()) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        view,
+                        "Bạn có chắc chắn muốn tạo mới bàn cờ không?\nLượt chơi hiện tại sẽ tính là một trận THUA (Bỏ cuộc)!",
+                        "Xác nhận tạo mới",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+                // Nếu người chơi chọn NO hoặc tắt Pop-up thì dừng toàn bộ xử lý, giữ nguyên màn chơi cũ
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+
+                // Nếu người chơi chọn YES -> Tiến hành ghi nhận trận này là Thua (Bỏ cuộc) vào lịch sử
+                saveMatchToHistory("Thua (Bỏ cuộc)");
+            }
+
+
             engine.stop();
 
             // 1. Lấy độ khó người chơi chọn từ ComboBox trên giao diện
@@ -121,6 +147,9 @@ public class SudokuController {
             // Làm mới đồng hồ đếm giờ hành trình
             gameTimer.reset();
             gameTimer.start();
+
+            //ĐÁNH DẤU CỜ HIỆU GAME CHÍNH THỨC BẮT ĐẦU CHẠY
+            isGameRunning = true;
         });
 
         // ==========================================================
@@ -183,7 +212,8 @@ public class SudokuController {
                 gameController.resumeGame();
                 gameTimer.start();
                 view.setCellsVisible(true);
-                setInputEnabled(true);
+                //setInputEnabled(true);
+                view.setGameplayButtonsEnabled(true); // Update: Gọi hàm mới từ View để mở khóa các nút
                 view.highlightSameNumbers();
                 checkBoardErrors();
                 view.getBtnPause().setText("Tạm dừng");
@@ -192,7 +222,8 @@ public class SudokuController {
                 gameController.pauseGame();
                 gameTimer.stop();
                 view.setCellsVisible(false);
-                setInputEnabled(false);
+                //setInputEnabled(false);
+                view.setGameplayButtonsEnabled(false); // Update: Gọi hàm mới từ View để ẩn các nút chức năng khác
                 view.getBtnPause().setText("Tiếp tục");
                 view.updateStatus("Đang tạm dừng...");
             }
@@ -269,7 +300,19 @@ public class SudokuController {
                 view.updateStatus("Không tìm thấy giải pháp khả thi cho trạng thái bảng này.");
             }
         });
+        /*
+            UC-5.6: Xem lịch sử các lần chơi
+            Xử lý Sự kiện nút "Xem Lịch Sử" (btnHistory):
+            Người thực hiện: Nguyễn Thanh Tú
+        */
+        view.getBtnHistory().addActionListener(e -> {
+            // Mở cửa sổ lịch sử độc lập
+            HistoryFrame historyWindow = new HistoryFrame();
+            historyWindow.setVisible(true);
+        });
     }
+
+
 
     private void setInputEnabled(boolean enabled) {
         for (int i = 0; i < 9; i++) {
@@ -418,6 +461,12 @@ public class SudokuController {
         triggerGameOver(true);
     }
 
+    /*
+        Update hàm cho UC-5.6: Xem lịch sử các lần chơi
+        Thêm biến isGameRunning = false, đánh dấu trận đấu kết thúc ngay lập tức
+        Khi người dùng chiến thắng hoặc thua cuộc (do quá lỗi) thì gọi hàm saveMatchToHistory lưu lại trạng thái tương ứng
+        Người thực hiện: Nguyễn Thanh Tú
+     */
     private void triggerGameOver(boolean won) {
         gameTimer.stop();
         String time = gameTimer.getTimeString();
@@ -428,15 +477,22 @@ public class SudokuController {
 
         view.getBtnPause().setEnabled(false);
 
+
+        isGameRunning = false; // Đánh dấu trận đấu kết thúc ngay lập tức
+
         if (won) {
+            saveMatchToHistory("Chiến thắng"); // Lưu lịch sử trận thắng
+
             JOptionPane.showMessageDialog(view,
                     "🎉 CHÚC MỪNG! Bạn đã hoàn thành xuất sắc bản Sudoku này!\n" + time,
                     "CHIẾN THẮNG", JOptionPane.INFORMATION_MESSAGE);
         } else {
+            saveMatchToHistory("Thua (Quá lỗi)"); // Lưu lịch sử trận thua do phạm quy
+
             JOptionPane.showMessageDialog(view,
                     "💀 GAME OVER! Bạn đã phạm quá " + gameController.getMaxMistakes() + " lỗi quy định.\n" + time,
                     "THUA CUỘC", JOptionPane.ERROR_MESSAGE);
-            view.getBtnGenerate().doClick(); // Tự động Reset tạo màn chơi mới
+//            view.getBtnGenerate().doClick(); // Tự động Reset tạo màn chơi mới
         }
     }
 
@@ -490,4 +546,46 @@ public class SudokuController {
 
         view.updateStatus("Đã thực hiện lại (Redo) hành động.");
     }
+    /*
+        UC-5.6: Xem lịch sử các lần chơi
+        Thêm hàm phụ trách ghi trận đấu vào file JSON (Dùng chung cho cả Thắng, Thua, Bỏ cuộc)
+        Khi người dùng chiến thắng hoặc thua cuộc thì gọi hàm saveMatchToHistory lưu lại trạng thái tương ứng
+        Người thực hiện: Nguyễn Thanh Tú
+    */
+    private void saveMatchToHistory(String outcome) {
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String currentDate = sdf.format(new java.util.Date());
+        String currentLevel = view.getSelectedLevel();
+        int duration = gameTimer.getSeconds(); // Giả định hàm lấy tổng số giây hiện tại của bộ đếm của bạn
+
+        com.sudoku.model.GameMatch newMatch = new com.sudoku.model.GameMatch(currentDate, currentLevel, duration, outcome);
+
+        com.google.gson.Gson gson = new com.google.gson.Gson();
+        java.util.List<com.sudoku.model.GameMatch> historyList = new java.util.ArrayList<>();
+
+        // Đọc lịch sử cũ nếu có
+        java.io.File file = new java.io.File("history.json");
+        if (file.exists()) {
+            try (java.io.FileReader reader = new java.io.FileReader(file)) {
+                java.lang.reflect.Type listType = new com.google.gson.reflect.TypeToken<java.util.ArrayList<com.sudoku.model.GameMatch>>(){}.getType();
+                java.util.List<com.sudoku.model.GameMatch> existing = gson.fromJson(reader, listType);
+                if (existing != null) {
+                    historyList.addAll(existing);
+                }
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Thêm trận mới vào danh sách
+        historyList.add(newMatch);
+
+        // Ghi ngược lại vào file
+        try (java.io.FileWriter writer = new java.io.FileWriter("history.json")) {
+            gson.toJson(historyList, writer);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+

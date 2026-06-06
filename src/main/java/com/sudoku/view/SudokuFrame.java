@@ -26,6 +26,7 @@ public class SudokuFrame extends JFrame {
 
     private JLabel lblMistakes;
 
+    private JButton btnHistory; // Thêm nút xem lịch sử
     // Lưu ô đang được chọn
     private int selectedRow = -1;
     private int selectedCol = -1;
@@ -182,6 +183,7 @@ public class SudokuFrame extends JFrame {
         btnShowSolution = new JButton("Xem Giải Pháp");
         lblStatus = new JLabel("Sẵn sàng!");
         lblLevels = new JLabel("Levels");
+        btnHistory = new JButton("Xem Lịch Sử");
         //Time:
 
         lblTimer = new JLabel("Thời gian: 00:00");
@@ -203,6 +205,7 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(btnUndo);
         pnlControl.add(lblLevels);
         pnlControl.add(cblevel);
+        pnlControl.add(btnHistory);
         add(pnlControl, BorderLayout.SOUTH);
     }
 
@@ -289,7 +292,7 @@ public class SudokuFrame extends JFrame {
 
                 } else {
                     // =================================================================
-                    // UR-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
+                    // UC-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
                     // =================================================================
                     cells[i][j].setText("");
 
@@ -332,7 +335,7 @@ public class SudokuFrame extends JFrame {
     }
     //Hàm cập nhật label hiển thị số lượt gợi ý
     public void updateHintUI(int remaining, int max) {
-        lblHintCount.setText("Lượt: " + remaining + "/" + max);
+        lblHintCount.setText("Gợi ý: " + remaining + "/" + max);
 
         if (remaining <= 0) {
             btnHint.setEnabled(false);
@@ -452,11 +455,35 @@ public class SudokuFrame extends JFrame {
             }
         }
     }
+
+
     //Hàm cập nhật số lần điền sai
     public void updateMistakeUI(int current, int max) {
         lblMistakes.setText("Lỗi: " + current + "/" + max);
     }
 
+
+    /*
+    UC-5.6: Xem lịch sử các lần chơi
+    Hàm dùng để ẩn các nút chức năng trên giao diện khi đang "Tạm dừng"
+    Nâng cấp cho phiên bản trước đó: vẫn hiển thị các nút chức năng khác như Tạo mới, Làm mới dẫn đến lỗi
+    Người thực hiện: Nguyễn Thanh Tú
+     */
+    public void setGameplayButtonsEnabled(boolean enabled) {
+        btnGenerate.setEnabled(enabled);
+        btnReset.setEnabled(enabled);
+        btnHint.setEnabled(enabled);
+        btnUndo.setEnabled(enabled);
+        btnShowSolution.setEnabled(enabled);
+        cblevel.setEnabled(enabled);
+
+        // Vô hiệu hóa hoặc kích hoạt tương tác trên các ô lưới
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                cells[i][j].setEnabled(enabled);
+            }
+        }
+    }
 
     // Getter ô đang chọn
     public int getSelectedRow() {
@@ -502,4 +529,6 @@ public class SudokuFrame extends JFrame {
 
         return cells[row][col];
     }
+
+    public JButton getBtnHistory() { return btnHistory; }
 }
