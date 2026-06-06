@@ -40,7 +40,7 @@ public class SudokuLogicTest {
     }
 
     /**
-     * KIỂM THỬ UR-3.1: Đối chiếu đáp án trực tiếp O(1)
+     * KIỂM THỬ [3.1.3]: Đối chiếu đáp án trực tiếp O(1)
      */
     @Test
     public void testCheckUserInput() {
@@ -57,7 +57,7 @@ public class SudokuLogicTest {
     }
 
     /**
-     * KIỂM THỬ UR-3.2: Kiểm tra trạng thái hoàn thành bảng
+     * KIỂM THỬ [3.1.5]: Kiểm tra trạng thái hoàn thành bảng
      */
     @Test
     public void testIsBoardComplete() {
@@ -71,7 +71,7 @@ public class SudokuLogicTest {
     }
 
     /**
-     * KIỂM THỬ UR-3.3: Thuật toán tự động giải (Backtracking)
+     * KIỂM THỬ [3.2.4]: Thuật toán tự động giải (Backtracking)
      */
     @Test
     public void testSolveSudoku() {
@@ -91,7 +91,7 @@ public class SudokuLogicTest {
     }
 
     /**
-     * KIỂM THỬ UR-3.4: Kiểm tra luật Sudoku tiêu chuẩn
+     * KIỂM THỬ [3.1.3]: Kiểm tra luật Sudoku tiêu chuẩn
      */
     @Test
     public void testIsValidRules() {
