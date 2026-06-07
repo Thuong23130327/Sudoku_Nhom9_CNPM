@@ -18,6 +18,8 @@ public class InputHandler {
         initListeners();
     }
 
+
+
     private void initListeners() {
         for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
@@ -33,6 +35,7 @@ public class InputHandler {
                     @Override
                     public void changedUpdate(DocumentEvent e) { validateCell(); }
 
+                    // [2.1.7] View kích hoạt DocumentListener, chuyển sự kiện đến InputHandler.validateCell().
                     private void validateCell() {
                         SwingUtilities.invokeLater(() -> {
                             String text = cell.getText();
@@ -47,15 +50,12 @@ public class InputHandler {
                                     return;
                                 }
 
-                                // Lấy bảng hiện tại
                                 int[][] board = view.getBoardData();
-                                
-                                // Bỏ giá trị hiện tại ở ô này để kiểm tra (để không bị tự trùng chính nó)
                                 board[row][col] = 0;
                                 
-                                // [3.1.3] Kiểm tra tính hợp lệ của số vừa nhập theo luật Sudoku
                                 boolean isValid = logic.isValidRules(board, row, col, num);
                                 
+                                // [2.1.8] InputHandler gọi highlightErrorCell để View phản hồi trực quan (đỏ nếu sai, bình thường nếu đúng)
                                 view.highlightErrorCell(row, col, !isValid);
                             } catch (NumberFormatException ex) {
                                 view.highlightErrorCell(row, col, true);

@@ -5,16 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/test/SudokuGeneratorTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/test/SudokuAutomationTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/test/SudokuAutomationTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuBoard.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuBoard.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuLogic.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuLogic.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/InputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuBoard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuLogic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,26 +65,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Thuong&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "JUnit.SudokuGeneratorTest.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "#28 on Thuong",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager">
+}]]></component>
+  <component name="RunManager" selected="JUnit.SudokuGeneratorTest">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Sudoku_Nhom9_CNPM" />
@@ -66,8 +93,24 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SudokuGeneratorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Sudoku_Nhom9_CNPM" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.sudoku.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.sudoku.test" />
+      <option name="MAIN_CLASS_NAME" value="com.sudoku.test.SudokuGeneratorTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.SudokuGeneratorTest" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -95,7 +138,17 @@
       <workItem from="1778838887831" duration="46000" />
       <workItem from="1779257680418" duration="78000" />
       <workItem from="1779266627061" duration="364000" />
-      <workItem from="1780295123681" duration="74000" />
+      <workItem from="1780295123681" duration="1261000" />
+      <workItem from="1780313856764" duration="46000" />
+      <workItem from="1780314763679" duration="372000" />
+      <workItem from="1780315276152" duration="28000" />
+      <workItem from="1780662191616" duration="1084000" />
+      <workItem from="1780728971777" duration="309000" />
+      <workItem from="1780734234067" duration="313000" />
+      <workItem from="1780757967160" duration="5820000" />
+      <workItem from="1780765019135" duration="3950000" />
+      <workItem from="1780814899141" duration="8428000" />
+      <workItem from="1780831501183" duration="1818000" />
     </task>
     <servers />
   </component>

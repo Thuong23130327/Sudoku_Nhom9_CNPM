@@ -7,6 +7,8 @@ package com.sudoku.model;
  */
 public class SudokuLogic {
 
+
+
     /**
      * [3.1.3] Kiểm tra tính chính xác của nước đi (Strict Validation)
      * So sánh trực tiếp giá trị nhập với ma trận đáp án đã có sẵn trong Model.
