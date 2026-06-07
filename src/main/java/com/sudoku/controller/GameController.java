@@ -1,5 +1,4 @@
 package com.sudoku.controller;
-import com.google.gson.Gson;
 
 /**
  * [UC-05] Quản lý trạng thái game tập trung
@@ -9,7 +8,6 @@ import com.google.gson.Gson;
  * UR-5.4 → recordMistake() đếm lỗi, chống đếm trùng
  * UR-5.5 → isGameLost(), setWon(), setLost()
  */
-
 public class GameController {
 
     public enum GameState {

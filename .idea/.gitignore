@@ -21,9 +21,7 @@ target/
 *.jard
 *.war
 *.ear
-# Không chặn thư mục chứa file jar thư viện
-!/lib/
-!/lib/*.jar
+
 ### Eclipse ###
 .apt_generated
 .classpath
