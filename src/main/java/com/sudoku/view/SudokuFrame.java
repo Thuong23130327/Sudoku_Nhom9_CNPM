@@ -64,31 +64,35 @@ public class SudokuFrame extends JFrame {
                 final int r = i;
                 final int c = j;
 
-                // ===========================================================================
-                // UR-2.1: Hệ thống phải cho phép người dùng chọn một ô trống trên lưới bằng chuột
-                // ===========================================================================
+                // [2.1.1] Người chơi dùng chuột click chọn 1 ô trên giao diện bàn cờ. (View — SudokuFrame.mouseClicked())
                 cells[i][j].addMouseListener(new MouseAdapter() {
 
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        // Chỉ cho phép chọn ô trống (ô có thể chỉnh sửa)
+                        // [2.3.1] View kiểm tra JTextField.isEditable() — phát hiện ô thuộc đề bài gốc.
                         if (!cells[r][c].isEditable()) {
+                            // [2.3.2] View phát hiện ô là Read-Only, không ghi nhận selectedRow/selectedCol. (SudokuFrame.mouseClicked → return)
                             return;
                         }
 
+                        // [2.1.2] View tính toán tọa độ lưới (row, col), ghi nhận vào selectedRow, selectedCol.
                         selectedRow = r;
                         selectedCol = c;
-                        // Ép ô này nhận Focus để kích hoạt FocusListener
+                        // [2.1.3] View gọi JTextField.requestFocusInWindow() để ô nhận focus, kích hoạt FocusListener.
                         cells[r][c].requestFocusInWindow();
+                        // [2.1.4] View gọi SudokuFrame.highlightSameNumbers() highlight tất cả ô cùng giá trị.
                         highlightSameNumbers();
                     }
                 });
-                //Sự kiện khi người dùng chọn vào 1 ô thì ô đó sẽ được highlight đồng bộ:
+                // [2.2.4] FocusListener — khi moveFocus() gọi requestFocus() chuyển sang ô mới,
+                //          FocusListener tự động cập nhật selectedRow/selectedCol và gọi highlightSameNumbers().
                 cells[i][j].addFocusListener(new java.awt.event.FocusAdapter() {
                     public void focusGained(java.awt.event.FocusEvent evt) {
+                        // [2.3.1] Kiểm tra ô gốc — nếu Read-Only thì không ghi nhận.
                         if (!cells[r][c].isEditable()) {
                             return;
                         }
+                        // [2.2.4] Cập nhật selectedRow/selectedCol và highlight ô mới.
                         selectedRow = r;
                         selectedCol = c;
                         highlightSameNumbers();
@@ -100,12 +104,16 @@ public class SudokuFrame extends JFrame {
                     }
                 });
                 // =============================================================
-                // UR-2.2: Hệ thống tiếp nhận giá trị nhập từ bàn phím. Chuyển đổi văn bản nhập vào thành số nguyên từ 1-9.
+                // [2.1.5] Người chơi gõ một số (1-9) hoặc nhấn phím Backspace/Delete. (View — SudokuFrame.keyTyped() / keyPressed())
+                // [2.3.3] Người chơi thực hiện nhập phím số hoặc xóa vào ô này.
                 // =============================================================
                 cells[i][j].addKeyListener(new java.awt.event.KeyAdapter() {
+
                     @Override
                     public void keyTyped(java.awt.event.KeyEvent e) {
                         // Block input nếu game đang Pause (isEnabled = false) hoặc Game Over/Ô đề bài (isEditable = false)
+                        // [2.3.4] View nhận sự kiện nhưng kiểm tra trạng thái thấy ô hiện tại là ô gốc (Read-Only), từ chối thực hiện lệnh cập nhật.
+                        // [2.3.5] Giá trị ô đề bài được giữ nguyên trên giao diện.
                         if (!cells[r][c].isEditable() || !cells[r][c].isEnabled()) {
                             e.consume();
                             return;
@@ -113,13 +121,15 @@ public class SudokuFrame extends JFrame {
 
                         char charKey = e.getKeyChar();
 
-                        // Chỉ cho phép nhập số 1-9
+                        // [2.4.1] Người chơi nhập phím không thuộc phạm vi 1-9 (ví dụ: chữ cái 'a', ký tự đặc biệt '@', phím số '0').
                         if (!((charKey >= '1') && (charKey <= '9'))) {
+                            // [2.4.2] Ngay tại View, phương thức SudokuFrame.keyTyped() bắt sự kiện, nhận diện ký tự không hợp lệ và chặn lại bằng e.consume().
                             e.consume(); // Chặn ký tự lạ
                             return;
                         }
 
-                        // Nếu ô đã có nội dung, ghi đè nội dung mới thay vì nối thêm. Giúp ô Sudoku luôn chỉ có 1 chữ số
+                        // [2.1.6] Nếu ô đã có nội dung, ghi đè nội dung mới thay vì nối thêm.
+                        // (View — SudokuFrame.setText(""))
                         if (cells[r][c].getText().length() >= 1) {
                             cells[r][c].setText("");
                         }
@@ -133,9 +143,9 @@ public class SudokuFrame extends JFrame {
                         highlightSameNumbers();
                     }
                 });
-                // (Block MouseListener trùng lặp đã được gỡ bỏ — logic chọn ô nằm ở UR-2.1 phía trên)
+                // (Block MouseListener trùng lặp đã được gỡ bỏ — logic chọn ô nằm ở [2.1.1] phía trên)
                 // ===========================================================================
-                // UR-2.5: Hệ thống phải hỗ trợ người dùng chuyển đổi giữa các ô bằng các phím mũi tên trên bàn phím.
+                // [2.2.1] Người chơi nhấn một trong các phím mũi tên (Up, Down, Left, Right). (View — SudokuFrame.keyPressed())
                 // ===========================================================================
                 cells[i][j].addKeyListener(new java.awt.event.KeyAdapter() {
                     @Override
@@ -150,7 +160,7 @@ public class SudokuFrame extends JFrame {
                                 code == java.awt.event.KeyEvent.VK_DOWN ||
                                 code == java.awt.event.KeyEvent.VK_LEFT ||
                                 code == java.awt.event.KeyEvent.VK_RIGHT) {
-
+                            // [2.2.2] View gửi KeyEvent để xử lý di chuyển bằng phím mũi tên.
                             moveFocus(r, c, code);
                         }
                     }
@@ -218,6 +228,8 @@ public class SudokuFrame extends JFrame {
 
     }
 
+    // [2.2.3] Tính toán tọa độ (nextR, nextC) của ô đích dựa trên phím mũi tên.
+    // [2.5.1] Phép % 9 xử lý wrap around khi vượt biên (ví dụ: row 0 + UP → row 8).
     // HÀM TẠO GIAO DIỆN BÀN PHÍM ẢO
     private JPanel createVirtualKeyboard() {
         // Sử dụng BorderLayout để chia khu vực: phần Lưới số ở trên, nút Xóa ở dưới
@@ -299,22 +311,24 @@ public class SudokuFrame extends JFrame {
 
         switch (keyCode) {
             case java.awt.event.KeyEvent.VK_UP:
-                nextR = (currentRow - 1 + 9) % 9; // Lên trên (vòng lại nếu ở biên)
+                nextR = (currentRow - 1 + 9) % 9; // [2.5.1] Wrap around: hàng 0 → hàng 8
                 break;
             case java.awt.event.KeyEvent.VK_DOWN:
-                nextR = (currentRow + 1) % 9;     // Xuống dưới
+                nextR = (currentRow + 1) % 9;     // [2.5.1] Wrap around: hàng 8 → hàng 0
                 break;
             case java.awt.event.KeyEvent.VK_LEFT:
-                nextC = (currentCol - 1 + 9) % 9; // Sang trái
+                nextC = (currentCol - 1 + 9) % 9; // [2.5.1] Wrap around: cột 0 → cột 8
                 break;
             case java.awt.event.KeyEvent.VK_RIGHT:
-                nextC = (currentCol + 1) % 9;     // Sang phải
+                nextC = (currentCol + 1) % 9;     // [2.5.1] Wrap around: cột 8 → cột 0
                 break;
             default:
-                return; // Nếu là phím khác thì không làm gì
+                return; // Phím khác — không xử lý
         }
 
-        cells[nextR][nextC].requestFocus(); // Chuyển con trỏ sang ô mới
+        // [2.2.4] View gọi JTextField.requestFocus() chuyển focus sang ô mới.
+        // [2.5.2] Focus tự động chuyển sang ô đầu/cuối hàng/cột nếu vượt biên (kết quả của 2.5.1).
+        cells[nextR][nextC].requestFocus();
     }
 
     // Lấy dữ liệu từ giao diện ra mảng int[][]
@@ -329,9 +343,7 @@ public class SudokuFrame extends JFrame {
                 String text = cells[i][j].getText();
 
                 try {
-                    // =============================================================
-                    // UR-2.2: Hệ thống tiếp nhận giá trị nhập từ bàn phím. Chuyển đổi văn bản nhập vào thành số nguyên từ 1-9.
-                    // =============================================================
+                    // View lấy giá trị tại ô (chuyển đổi văn bản nhập vào thành số nguyên từ 1-9).
                     int value = Integer.parseInt(text);
                     if (value >= 1 && value <= 9) {
                         board[i][j] = value;
@@ -351,7 +363,9 @@ public class SudokuFrame extends JFrame {
 
     // Hiển thị đề bài lên giao diện
     public void setBoardData(int[][] board) {
-
+        // 1.1.17: SudokuFrame lặp qua 81 ô, tự gọi hàm JTextField.setText() và
+        // JTextField.setEditable(false/true) để render lại các ô trên màn hình.
+        // 1.2.5: SudokuFrame lặp qua 81 ô và tự gọi hàm JTextField.setText(value) ghi đè lại dữ liệu mảng gốc.
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
@@ -362,7 +376,7 @@ public class SudokuFrame extends JFrame {
                             .setText(String.valueOf(board[i][j]));
 
                     // =================================================================
-                    // UR-2.4: Hệ thống ngăn chặn việc chỉnh sửa/xóa ô thuộc đề bài gốc
+                    // Phát hiện tọa độ thuộc về ô đề bài gốc và thiết lập Read-Only.
                     // =================================================================
 
                     // Con số nằm trong ô thuộc đề bài gốc thì không được phép thay đổi:
@@ -371,7 +385,7 @@ public class SudokuFrame extends JFrame {
                     cells[i][j].setForeground(Color.BLUE);
 
                     cells[i][j]
-                            .setBackground(new Color(230, 230, 230));
+                            .setBackground(getBaseColor(i, j, false));
 
                 } else {
                     // =================================================================
@@ -383,7 +397,7 @@ public class SudokuFrame extends JFrame {
 
                     cells[i][j].setForeground(Color.BLACK);
 
-                    cells[i][j].setBackground(Color.WHITE);
+                    cells[i][j].setBackground(getBaseColor(i, j, true));
 
                 }
             }
@@ -412,7 +426,7 @@ public class SudokuFrame extends JFrame {
                 cells[i][j].setText("");
                 cells[i][j].setEditable(true);
                 cells[i][j].setForeground(Color.BLACK);
-                cells[i][j].setBackground(Color.WHITE);
+                cells[i][j].setBackground(getBaseColor(i, j, true));
             }
         }
     }
@@ -472,17 +486,22 @@ public class SudokuFrame extends JFrame {
                         new Color(255, 220, 100));
     }
 
+    private Color getBaseColor(int r, int c, boolean isEditable) {
+        boolean isDarkBlock = ((r / 3) + (c / 3)) % 2 != 0;
+        if (isEditable) {
+            return isDarkBlock ? new Color(245, 245, 245) : Color.WHITE;
+        } else {
+            return isDarkBlock ? new Color(215, 215, 215) : new Color(230, 230, 230);
+        }
+    }
+
     // Reset màu ô
     public void resetCellColors() {
 
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
-                if (cells[i][j].isEditable()) {
-                    cells[i][j].setBackground(Color.WHITE);
-                } else {
-                    cells[i][j].setBackground(new Color(230, 230, 230));
-                }
+                cells[i][j].setBackground(getBaseColor(i, j, cells[i][j].isEditable()));
             }
         }
     }
@@ -494,7 +513,7 @@ public class SudokuFrame extends JFrame {
             cells[row][col].setText("");
             cells[row][col].setEditable(true);
             cells[row][col].setForeground(Color.BLACK);
-            cells[row][col].setBackground(Color.WHITE);
+            cells[row][col].setBackground(getBaseColor(row, col, true));
         } else {
             cells[row][col].setText(String.valueOf(value));
             cells[row][col].setForeground(Color.RED);
@@ -520,14 +539,31 @@ public class SudokuFrame extends JFrame {
             cells[row][col].setBackground(new Color(255, 200, 200));
         } else {
             // Trả lại màu bình thường nếu không phải là đề bài
+            cells[row][col].setBackground(getBaseColor(row, col, cells[row][col].isEditable()));
             if (cells[row][col].isEditable()) {
                 cells[row][col].setForeground(Color.BLACK);
-                cells[row][col].setBackground(Color.WHITE);
             } else {
                 cells[row][col].setForeground(Color.BLUE);
-                cells[row][col].setBackground(new Color(230, 230, 230));
             }
         }
+    }
+
+    // ==========================================================
+    // Yêu cầu hiển thị giá trị mới (dùng cho Auto-Solve/Hint, không dùng trong nhập tay)
+    // ==========================================================
+    public void updateCellDisplay(int row, int col, int value) {
+        if (value == 0) {
+            cells[row][col].setText("");
+        } else {
+            cells[row][col].setText(String.valueOf(value));
+        }
+    }
+
+    // ==========================================================
+    // Yêu cầu bỏ highlight ô cũ và chuyển sang ô mới.
+    // ==========================================================
+    public void changeSelectedCell(int oldRow, int oldCol, int newRow, int newCol) {
+        cells[newRow][newCol].requestFocus();
     }
 
     // Hàm ẩn/hiện bàn cờ khi Pause (UR-5.2)
