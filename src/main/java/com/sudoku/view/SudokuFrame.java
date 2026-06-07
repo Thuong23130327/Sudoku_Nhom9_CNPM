@@ -26,16 +26,23 @@ public class SudokuFrame extends JFrame {
 
     private JLabel lblMistakes;
 
+    private JButton btnHistory;
+
+    //Mảng chứa 10 nút bấm của Bàn phím ảo (0-9)
+    private JButton[] btnNumbers = new JButton[10];
+
     // Lưu ô đang được chọn
     private int selectedRow = -1;
     private int selectedCol = -1;
 
     public SudokuFrame() {
+
         setTitle("Sudoku");
         setSize(1100, 680);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         // BÀN CỜ
+
         JPanel pnlBoard = new JPanel(new GridLayout(9, 9));
 
         pnlBoard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -64,6 +71,10 @@ public class SudokuFrame extends JFrame {
 
                     @Override
                     public void mouseClicked(MouseEvent e) {
+                        // Chỉ cho phép chọn ô trống (ô có thể chỉnh sửa)
+                        if (!cells[r][c].isEditable()) {
+                            return;
+                        }
 
                         selectedRow = r;
                         selectedCol = c;
@@ -72,20 +83,20 @@ public class SudokuFrame extends JFrame {
                         highlightSameNumbers();
                     }
                 });
-                //Sự kiện khi người dùng chọn vào 1 ô thì ô đó sẽ hiện lên màu xanh lá cây để nhận biết:
+                //Sự kiện khi người dùng chọn vào 1 ô thì ô đó sẽ được highlight đồng bộ:
                 cells[i][j].addFocusListener(new java.awt.event.FocusAdapter() {
                     public void focusGained(java.awt.event.FocusEvent evt) {
-                        JTextField source = (JTextField)evt.getSource();
-                        source.setBackground(new Color(0, 255, 0)); // Xanh lá cây khi chọn
+                        if (!cells[r][c].isEditable()) {
+                            return;
+                        }
+                        selectedRow = r;
+                        selectedCol = c;
+                        highlightSameNumbers();
                     }
                     public void focusLost(java.awt.event.FocusEvent evt) {
-                        JTextField source = (JTextField)evt.getSource();
-                        // Trả lại màu cũ tùy theo ô đó là đề bài hay ô trống
-                        if (!source.isEditable()) {
-                            source.setBackground(new Color(230, 230, 230));
-                        } else {
-                            source.setBackground(Color.WHITE);
-                        }
+                        selectedRow = -1;
+                        selectedCol = -1;
+                        resetCellColors();
                     }
                 });
                 // =============================================================
@@ -94,6 +105,12 @@ public class SudokuFrame extends JFrame {
                 cells[i][j].addKeyListener(new java.awt.event.KeyAdapter() {
                     @Override
                     public void keyTyped(java.awt.event.KeyEvent e) {
+                        // Block input nếu game đang Pause (isEnabled = false) hoặc Game Over/Ô đề bài (isEditable = false)
+                        if (!cells[r][c].isEditable() || !cells[r][c].isEnabled()) {
+                            e.consume();
+                            return;
+                        }
+
                         char charKey = e.getKeyChar();
 
                         // Chỉ cho phép nhập số 1-9
@@ -107,22 +124,27 @@ public class SudokuFrame extends JFrame {
                             cells[r][c].setText("");
                         }
                     }
-                });
-                cells[i][j].addMouseListener(new MouseAdapter() {
+
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                        selectedRow = r; // Dùng r thay vì i
-                        selectedCol = c; // Dùng c thay vì j
-                        cells[r][c].requestFocusInWindow();
+                    public void keyReleased(java.awt.event.KeyEvent e) {
+                        if (!cells[r][c].isEditable() || !cells[r][c].isEnabled()) {
+                            return;
+                        }
                         highlightSameNumbers();
                     }
                 });
+                // (Block MouseListener trùng lặp đã được gỡ bỏ — logic chọn ô nằm ở UR-2.1 phía trên)
                 // ===========================================================================
                 // UR-2.5: Hệ thống phải hỗ trợ người dùng chuyển đổi giữa các ô bằng các phím mũi tên trên bàn phím.
                 // ===========================================================================
                 cells[i][j].addKeyListener(new java.awt.event.KeyAdapter() {
                     @Override
                     public void keyPressed(java.awt.event.KeyEvent e) {
+                        // Khóa điều hướng nếu game đang Pause
+                        if (!cells[r][c].isEnabled()) {
+                            return;
+                        }
+                        
                         int code = e.getKeyCode();
                         if (code == java.awt.event.KeyEvent.VK_UP ||
                                 code == java.awt.event.KeyEvent.VK_DOWN ||
@@ -167,6 +189,7 @@ public class SudokuFrame extends JFrame {
         btnShowSolution = new JButton("Xem Giải Pháp");
         lblStatus = new JLabel("Sẵn sàng!");
         lblLevels = new JLabel("Levels");
+        btnHistory = new JButton("Xem Lịch Sử");
         //Time:
 
         lblTimer = new JLabel("Thời gian: 00:00");
@@ -188,9 +211,84 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(btnUndo);
         pnlControl.add(lblLevels);
         pnlControl.add(cblevel);
+        pnlControl.add(btnHistory);
         add(pnlControl, BorderLayout.SOUTH);
+        JPanel pnlKeyboard = createVirtualKeyboard();
+        add(pnlKeyboard, BorderLayout.EAST);
+
     }
 
+    // HÀM TẠO GIAO DIỆN BÀN PHÍM ẢO
+    private JPanel createVirtualKeyboard() {
+        // Sử dụng BorderLayout để chia khu vực: phần Lưới số ở trên, nút Xóa ở dưới
+        JPanel pnlKeyboard = new JPanel(new BorderLayout(10, 10)); 
+
+        // Trang trí viền bao quanh bàn phím
+        pnlKeyboard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                        BorderFactory.createLineBorder(new Color(150, 150, 150), 1, true),
+                        " Bàn Phím Ảo ",
+                        0, 0,
+                        new Font("Arial", Font.BOLD, 14),
+                        new Color(80, 80, 80)
+                ),
+                BorderFactory.createEmptyBorder(20, 20, 20, 20)
+        ));
+
+        // Fix kích thước để bàn phím không bị méo khi kéo giãn cửa sổ
+        pnlKeyboard.setPreferredSize(new Dimension(280, 350));
+
+        Font btnFont = new Font("Segoe UI", Font.BOLD, 26);
+
+        // 1. TẠO LƯỚI 3x3 CHỨA CÁC SỐ TỪ 1 ĐẾN 9
+        JPanel pnlNumbers = new JPanel(new GridLayout(3, 3, 10, 10));
+        for (int i = 1; i <= 9; i++) {
+            btnNumbers[i] = new JButton(String.valueOf(i));
+            styleVirtualButton(btnNumbers[i], btnFont, new Color(245, 245, 245), new Color(50, 50, 50));
+            pnlNumbers.add(btnNumbers[i]);
+        }
+
+        // 2. TẠO NÚT XÓA CHIẾM FULL CHIỀU NGANG
+        btnNumbers[0] = new JButton("Xóa");
+        styleVirtualButton(btnNumbers[0], btnFont, new Color(255, 220, 220), new Color(200, 0, 0));
+
+        btnNumbers[0].setPreferredSize(new Dimension(0, 65));
+
+        // 3. RÁP CÁC THÀNH PHẦN VÀO PANEL CHÍNH
+        pnlKeyboard.add(pnlNumbers, BorderLayout.CENTER);
+        pnlKeyboard.add(btnNumbers[0], BorderLayout.SOUTH);
+        JPanel pnlOuter = new JPanel(new BorderLayout());
+        pnlOuter.add(pnlKeyboard, BorderLayout.NORTH);
+
+        return pnlOuter;
+    }
+    // -------------------------------------------------------------------------
+    // HÀM HỖ TRỢ TRANG TRÍ NÚT BẤM (CSS-like cho Java Swing)
+    // -------------------------------------------------------------------------
+    private void styleVirtualButton(JButton btn, Font font, Color bgColor, Color fgColor) {
+        btn.setFont(font);
+        btn.setBackground(bgColor);
+        btn.setForeground(fgColor);
+        btn.setFocusPainted(false);
+        btn.setFocusable(false);
+        btn.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                // Làm tối màu nền đi một chút khi hover
+                btn.setBackground(bgColor.darker());
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                // Trả lại màu cũ khi chuột dời đi
+                btn.setBackground(bgColor);
+            }
+        });
+    }
+
+    // Hàm lấy nút bấm để Controller gọi sự kiện
+    public JButton getVirtualButton(int number) {
+        return btnNumbers[number];
+    }
     //Hàm xử lý cho phép người chơi dùng phím mũi tên di chuyển giữa các ô
     public void moveFocus(int currentRow, int currentCol, int keyCode) {
         int nextR = currentRow;
@@ -274,7 +372,7 @@ public class SudokuFrame extends JFrame {
 
                 } else {
                     // =================================================================
-                    // UR-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
+                    // UC-2.3: Cho phép người dùng nhập và xóa giá trị (Backspace/Delete) thông qua việc thiết lập quyền chỉnh sửa cho ô trống.
                     // =================================================================
                     cells[i][j].setText("");
 
@@ -317,7 +415,7 @@ public class SudokuFrame extends JFrame {
     }
     //Hàm cập nhật label hiển thị số lượt gợi ý
     public void updateHintUI(int remaining, int max) {
-        lblHintCount.setText("Lượt: " + remaining + "/" + max);
+        lblHintCount.setText("Gợi ý: " + remaining + "/" + max);
 
         if (remaining <= 0) {
             btnHint.setEnabled(false);
@@ -349,8 +447,9 @@ public class SudokuFrame extends JFrame {
         String value =
                 cells[selectedRow][selectedCol].getText();
 
-        // Nếu ô trống thì không highlight
+        // Nếu ô trống thì chỉ highlight focus
         if (value.isEmpty()) {
+            cells[selectedRow][selectedCol].setBackground(new Color(173, 216, 230)); // Xanh nhạt focus
             return;
         }
 
@@ -358,10 +457,6 @@ public class SudokuFrame extends JFrame {
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
-
-                // Nếu là ô đang focus thì không đè màu vàng lên
-                if (cells[i][j].isFocusOwner()) continue;
-
                 if (cells[i][j].getText().equals(value)) {
                     cells[i][j].setBackground(new Color(255, 255, 150)); // Màu vàng highlight
                 }
@@ -380,16 +475,12 @@ public class SudokuFrame extends JFrame {
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
-                // Nếu ô này đang có focus thì KHÔNG reset màu (để giữ màu xanh)
-                if (cells[i][j].isFocusOwner()) {
-                    continue;
-                }
-
                 if (cells[i][j].isEditable()) {
                     cells[i][j].setBackground(Color.WHITE);
                 } else {
                     cells[i][j].setBackground(new Color(230, 230, 230));
-                }            }
+                }
+            }
         }
     }
 
@@ -444,11 +535,35 @@ public class SudokuFrame extends JFrame {
             }
         }
     }
+
+
     //Hàm cập nhật số lần điền sai
     public void updateMistakeUI(int current, int max) {
         lblMistakes.setText("Lỗi: " + current + "/" + max);
     }
 
+
+    /*
+    UC-5.6: Xem lịch sử các lần chơi
+    Hàm dùng để ẩn các nút chức năng trên giao diện khi đang "Tạm dừng"
+    Nâng cấp cho phiên bản trước đó: vẫn hiển thị các nút chức năng khác như Tạo mới, Làm mới dẫn đến lỗi
+    Người thực hiện: Nguyễn Thanh Tú
+     */
+    public void setGameplayButtonsEnabled(boolean enabled) {
+        btnGenerate.setEnabled(enabled);
+        btnReset.setEnabled(enabled);
+        btnHint.setEnabled(enabled);
+        btnUndo.setEnabled(enabled);
+        btnShowSolution.setEnabled(enabled);
+        cblevel.setEnabled(enabled);
+
+        // Vô hiệu hóa hoặc kích hoạt tương tác trên các ô lưới
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                cells[i][j].setEnabled(enabled);
+            }
+        }
+    }
 
     // Getter ô đang chọn
     public int getSelectedRow() {
@@ -494,4 +609,8 @@ public class SudokuFrame extends JFrame {
 
         return cells[row][col];
     }
+
+    public JButton getBtnHistory() { return btnHistory; }
+
+
 }
