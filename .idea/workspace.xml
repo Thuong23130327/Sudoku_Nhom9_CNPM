@@ -4,30 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/test/SudokuGeneratorTest.java" afterDir="false" />
+    <list default="true" id="0d4c866c-abbd-41b2-a755-dc354882b8bf" name="Changes" comment="Merge branch 'main' of https://github.com/Thuong23130327/Sudoku_Nhom9_CNPM into Thuong&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$1.class&#10;#&#9;out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$2.class&#10;#&#9;out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$3.class&#10;#&#9;out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$4.class&#10;#&#9;out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class&#10;#&#9;src/main/java/com/sudoku/controller/SudokuController.java&#10;#&#9;src/main/java/com/sudoku/view/SudokuFrame.java">
+      <change beforePath="$PROJECT_DIR$/.idea/Sudoku_Nhom9_CNPM.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Sudoku_Nhom9_CNPM.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/InputHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/controller/SudokuController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuBoard.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuBoard.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuGenerator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuLogic.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/model/SudokuLogic.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$3.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame$5.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Sudoku_Nhom9_CNPM/com/sudoku/view/SudokuFrame.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/InputHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/controller/SudokuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuLogic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/model/SudokuLogic.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/sudoku/view/SudokuFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +77,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.SudokuGeneratorTest">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="Sudoku_Nhom9_CNPM" />
@@ -110,8 +102,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.SudokuGeneratorTest" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.SudokuGeneratorTest" />
       </list>
     </recent_temporary>
   </component>
@@ -154,5 +146,9 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="conflict" />
+    <option name="LAST_COMMIT_MESSAGE" value="conflict" />
   </component>
 </project>

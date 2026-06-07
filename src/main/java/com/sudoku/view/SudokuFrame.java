@@ -385,7 +385,7 @@ public class SudokuFrame extends JFrame {
                     cells[i][j].setForeground(Color.BLUE);
 
                     cells[i][j]
-                            .setBackground(new Color(230, 230, 230));
+                            .setBackground(getBaseColor(i, j, false));
 
                 } else {
                     // =================================================================
@@ -397,7 +397,7 @@ public class SudokuFrame extends JFrame {
 
                     cells[i][j].setForeground(Color.BLACK);
 
-                    cells[i][j].setBackground(Color.WHITE);
+                    cells[i][j].setBackground(getBaseColor(i, j, true));
 
                 }
             }
@@ -426,7 +426,7 @@ public class SudokuFrame extends JFrame {
                 cells[i][j].setText("");
                 cells[i][j].setEditable(true);
                 cells[i][j].setForeground(Color.BLACK);
-                cells[i][j].setBackground(Color.WHITE);
+                cells[i][j].setBackground(getBaseColor(i, j, true));
             }
         }
     }
@@ -486,17 +486,22 @@ public class SudokuFrame extends JFrame {
                         new Color(255, 220, 100));
     }
 
+    private Color getBaseColor(int r, int c, boolean isEditable) {
+        boolean isDarkBlock = ((r / 3) + (c / 3)) % 2 != 0;
+        if (isEditable) {
+            return isDarkBlock ? new Color(245, 245, 245) : Color.WHITE;
+        } else {
+            return isDarkBlock ? new Color(215, 215, 215) : new Color(230, 230, 230);
+        }
+    }
+
     // Reset màu ô
     public void resetCellColors() {
 
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
-                if (cells[i][j].isEditable()) {
-                    cells[i][j].setBackground(Color.WHITE);
-                } else {
-                    cells[i][j].setBackground(new Color(230, 230, 230));
-                }
+                cells[i][j].setBackground(getBaseColor(i, j, cells[i][j].isEditable()));
             }
         }
     }
@@ -508,7 +513,7 @@ public class SudokuFrame extends JFrame {
             cells[row][col].setText("");
             cells[row][col].setEditable(true);
             cells[row][col].setForeground(Color.BLACK);
-            cells[row][col].setBackground(Color.WHITE);
+            cells[row][col].setBackground(getBaseColor(row, col, true));
         } else {
             cells[row][col].setText(String.valueOf(value));
             cells[row][col].setForeground(Color.RED);
@@ -534,12 +539,11 @@ public class SudokuFrame extends JFrame {
             cells[row][col].setBackground(new Color(255, 200, 200));
         } else {
             // Trả lại màu bình thường nếu không phải là đề bài
+            cells[row][col].setBackground(getBaseColor(row, col, cells[row][col].isEditable()));
             if (cells[row][col].isEditable()) {
                 cells[row][col].setForeground(Color.BLACK);
-                cells[row][col].setBackground(Color.WHITE);
             } else {
                 cells[row][col].setForeground(Color.BLUE);
-                cells[row][col].setBackground(new Color(230, 230, 230));
             }
         }
     }
