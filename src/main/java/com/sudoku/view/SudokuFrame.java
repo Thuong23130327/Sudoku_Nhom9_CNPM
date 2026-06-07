@@ -19,45 +19,48 @@ public class SudokuFrame extends JFrame {
     private JButton btnValidate; // [3.1.5] Nút Kiểm tra toàn bảng (đã ẩn khỏi UI)
     private JButton btnShowSolution; // [3.2.1] Nút Xem giải pháp (Auto-Solver)
     private JLabel lblStatus, lblHintCount;
-    private JLabel LblMistakes;
     private JComboBox<String> cblevel;
     private JLabel lblTimer , lblLevels;
     private JButton btnPause;
-
+    private JButton btnBackToMenu;
     private JLabel lblMistakes;
-
     private JButton btnHistory;
 
-    //Mảng chứa 10 nút bấm của Bàn phím ảo (0-9)
+    // Mảng chứa 10 nút bấm của Bàn phím ảo (0-9)
     private JButton[] btnNumbers = new JButton[10];
 
     // Lưu ô đang được chọn
     private int selectedRow = -1;
     private int selectedCol = -1;
 
+    // BỔ SUNG CÁC BIẾN CHO MODE 2 NGƯỜI CHƠI
+
+    private String playerName = "Người chơi";
+    private SudokuFrame opponentFrame = null;  // Tham chiếu đến thực thể của đối thủ
+    private boolean isGameOver = false;        // Trạng thái để chặn thao tác khi trận đấu kết thúc
+
+    // Constructor mặc định (Giữ nguyên cho Mode 1 người chơi)
     public SudokuFrame() {
+        this("Sudoku");
+    }
 
-        setTitle("Sudoku");
+    // NEW: Constructor có tham số để khởi tạo tiêu đề riêng cho từng người chơi
+    public SudokuFrame(String playerName) {
+        this.playerName = playerName;
+        setTitle("Sudoku - " + playerName);
         setSize(1100, 680);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Đổi thành DISPOSE để đóng 1 cửa sổ không sập toàn bộ app
         setLayout(new BorderLayout());
+
         // BÀN CỜ
-
         JPanel pnlBoard = new JPanel(new GridLayout(9, 9));
-
         pnlBoard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
         Font font = new Font("Arial", Font.BOLD, 20);
 
         for (int i = 0; i < 9; i++) {
-
             for (int j = 0; j < 9; j++) {
-
                 cells[i][j] = new JTextField();
-
-                cells[i][j]
-                        .setHorizontalAlignment(JTextField.CENTER);
-
+                cells[i][j].setHorizontalAlignment(JTextField.CENTER);
                 cells[i][j].setFont(font);
 
                 // Lưu vị trí ô được click
@@ -86,6 +89,8 @@ public class SudokuFrame extends JFrame {
                 });
                 // [2.2.4] FocusListener — khi moveFocus() gọi requestFocus() chuyển sang ô mới,
                 //          FocusListener tự động cập nhật selectedRow/selectedCol và gọi highlightSameNumbers().
+
+                // Highlight đồng bộ khi nhận focus
                 cells[i][j].addFocusListener(new java.awt.event.FocusAdapter() {
                     public void focusGained(java.awt.event.FocusEvent evt) {
                         // [2.3.1] Kiểm tra ô gốc — nếu Read-Only thì không ghi nhận.
@@ -187,7 +192,7 @@ public class SudokuFrame extends JFrame {
 
         // PANEL ĐIỀU KHIỂN
         JPanel pnlControl = new JPanel();
-        String[]levels = {"dễ", "trung bình","asian"};
+        String[] levels = {"dễ", "trung bình", "asian"};
         cblevel = new JComboBox<>(levels);
         btnGenerate = new JButton("Tạo Mới");
         btnUndo = new JButton("Hoàn Tác");
@@ -200,7 +205,7 @@ public class SudokuFrame extends JFrame {
         lblStatus = new JLabel("Sẵn sàng!");
         lblLevels = new JLabel("Levels");
         btnHistory = new JButton("Xem Lịch Sử");
-        //Time:
+        btnBackToMenu = new JButton("Về Menu");
 
         lblTimer = new JLabel("Thời gian: 00:00");
         btnPause = new JButton("Tạm dừng");
@@ -222,7 +227,9 @@ public class SudokuFrame extends JFrame {
         pnlControl.add(lblLevels);
         pnlControl.add(cblevel);
         pnlControl.add(btnHistory);
+        pnlControl.add(btnBackToMenu);
         add(pnlControl, BorderLayout.SOUTH);
+
         JPanel pnlKeyboard = createVirtualKeyboard();
         add(pnlKeyboard, BorderLayout.EAST);
 
@@ -300,6 +307,56 @@ public class SudokuFrame extends JFrame {
         });
     }
 
+    //Update UC3 : thêm đối kháng trực tiếp giữ 2 người chơi offline
+    // BỔ SUNG CÁC HÀM XỬ LÝ LOGIC ĐỐI KHÁNG (Multiplayer)
+    // Cài đặt liên kết đối thủ
+    public void setOpponentFrame(SudokuFrame opponent) {
+        this.opponentFrame = opponent;
+    }
+    public SudokuFrame getOpponentFrame() {
+        return this.opponentFrame;
+    }
+
+    public String getPlayerName() {
+        return this.playerName;
+    }
+
+    public boolean isGameOver() {
+        return this.isGameOver;
+    }
+
+    /* update UC3: đối kháng 2 người trực tiếp
+     * Hàm xử lý kết thúc trò chơi cho từng màn hình riêng biệt.
+     * @param isWinner true nếu thắng cuộc, false nếu thua cuộc.
+     * @param reason Lý do thắng/thua (Ví dụ: "quá số lỗi quy định", "hết thời gian").
+     */
+    public void endGame(boolean isWinner, String reason) {
+        if (this.isGameOver) return; // Nếu game đã kết thúc trước đó rồi thì bỏ qua
+        this.isGameOver = true;
+
+        // Vô hiệu hóa toàn bộ tương tác trên lưới số
+        setGameplayButtonsEnabled(false);
+        btnPause.setEnabled(false);
+
+        if (isWinner) {
+            updateStatus("CHIẾN THẮNG!");
+            JOptionPane.showMessageDialog(this,
+                    "Chúc mừng [" + playerName + "] đã CHIẾN THẮNG!\nLý do: Đối thủ đã " + reason,
+                    "Kết quả trận đấu",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            updateStatus("THUA CUỘC!");
+            JOptionPane.showMessageDialog(this,
+                    "Rất tiếc, [" + playerName + "] đã THUA CUỘC!\nLý do: Bạn đã " + reason,
+                    "Kết quả trận đấu",
+                    JOptionPane.ERROR_MESSAGE);
+
+            // Nếu có đối thủ và đối thủ chưa kết thúc game, kích hoạt đối thủ thắng
+            if (opponentFrame != null && !opponentFrame.isGameOver()) {
+                opponentFrame.endGame(true, reason);
+            }
+        }
+    }
     // Hàm lấy nút bấm để Controller gọi sự kiện
     public JButton getVirtualButton(int number) {
         return btnNumbers[number];
@@ -326,9 +383,7 @@ public class SudokuFrame extends JFrame {
                 return; // Phím khác — không xử lý
         }
 
-        // [2.2.4] View gọi JTextField.requestFocus() chuyển focus sang ô mới.
-        // [2.5.2] Focus tự động chuyển sang ô đầu/cuối hàng/cột nếu vượt biên (kết quả của 2.5.1).
-        cells[nextR][nextC].requestFocus();
+        cells[nextR][nextC].requestFocus(); // Chuyển con trỏ sang ô mới
     }
 
     // Lấy dữ liệu từ giao diện ra mảng int[][]
@@ -343,7 +398,9 @@ public class SudokuFrame extends JFrame {
                 String text = cells[i][j].getText();
 
                 try {
-                    // View lấy giá trị tại ô (chuyển đổi văn bản nhập vào thành số nguyên từ 1-9).
+                    // =============================================================
+                    // UR-2.2: Hệ thống tiếp nhận giá trị nhập từ bàn phím. Chuyển đổi văn bản nhập vào thành số nguyên từ 1-9.
+                    // =============================================================
                     int value = Integer.parseInt(text);
                     if (value >= 1 && value <= 9) {
                         board[i][j] = value;
@@ -363,9 +420,7 @@ public class SudokuFrame extends JFrame {
 
     // Hiển thị đề bài lên giao diện
     public void setBoardData(int[][] board) {
-        // 1.1.17: SudokuFrame lặp qua 81 ô, tự gọi hàm JTextField.setText() và
-        // JTextField.setEditable(false/true) để render lại các ô trên màn hình.
-        // 1.2.5: SudokuFrame lặp qua 81 ô và tự gọi hàm JTextField.setText(value) ghi đè lại dữ liệu mảng gốc.
+
         for (int i = 0; i < 9; i++) {
 
             for (int j = 0; j < 9; j++) {
@@ -376,7 +431,7 @@ public class SudokuFrame extends JFrame {
                             .setText(String.valueOf(board[i][j]));
 
                     // =================================================================
-                    // Phát hiện tọa độ thuộc về ô đề bài gốc và thiết lập Read-Only.
+                    // UR-2.4: Hệ thống ngăn chặn việc chỉnh sửa/xóa ô thuộc đề bài gốc
                     // =================================================================
 
                     // Con số nằm trong ô thuộc đề bài gốc thì không được phép thay đổi:
@@ -385,7 +440,7 @@ public class SudokuFrame extends JFrame {
                     cells[i][j].setForeground(Color.BLUE);
 
                     cells[i][j]
-                            .setBackground(getBaseColor(i, j, false));
+                            .setBackground(new Color(230, 230, 230));
 
                 } else {
                     // =================================================================
@@ -397,7 +452,7 @@ public class SudokuFrame extends JFrame {
 
                     cells[i][j].setForeground(Color.BLACK);
 
-                    cells[i][j].setBackground(getBaseColor(i, j, true));
+                    cells[i][j].setBackground(Color.WHITE);
 
                 }
             }
@@ -485,7 +540,6 @@ public class SudokuFrame extends JFrame {
                 .setBackground(
                         new Color(255, 220, 100));
     }
-
     private Color getBaseColor(int r, int c, boolean isEditable) {
         boolean isDarkBlock = ((r / 3) + (c / 3)) % 2 != 0;
         if (isEditable) {
@@ -496,7 +550,6 @@ public class SudokuFrame extends JFrame {
             return isDarkBlock ? new Color(200, 215, 235) : new Color(230, 230, 230);
         }
     }
-
     // Reset màu ô
     public void resetCellColors() {
 
@@ -541,7 +594,6 @@ public class SudokuFrame extends JFrame {
             cells[row][col].setBackground(new Color(255, 200, 200));
         } else {
             // Trả lại màu bình thường nếu không phải là đề bài
-            cells[row][col].setBackground(getBaseColor(row, col, cells[row][col].isEditable()));
             if (cells[row][col].isEditable()) {
                 cells[row][col].setForeground(Color.BLACK);
             } else {
@@ -643,15 +695,7 @@ public class SudokuFrame extends JFrame {
 
     public JLabel getLblTimer() { return lblTimer; }
     public JButton getBtnPause() { return btnPause; }
-
-    public JTextField getCell(
-            int row,
-            int col) {
-
-        return cells[row][col];
-    }
-
+    public JTextField getCell(int row, int col) { return cells[row][col]; }
     public JButton getBtnHistory() { return btnHistory; }
-
-
+    public JButton getBtnBackToMenu() {return btnBackToMenu;}
 }

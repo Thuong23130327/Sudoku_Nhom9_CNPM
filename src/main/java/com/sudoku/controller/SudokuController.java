@@ -29,6 +29,7 @@ public class SudokuController {
 
     public SudokuController(SudokuFrame view) {
         this.view = view;
+        // Khởi tạo các thành phần Model hợp lệ
         this.engine = new SudokuEngine();
         this.generator = new SudokuGenerator();
         this.logic = new SudokuLogic();
@@ -40,6 +41,40 @@ public class SudokuController {
 
         // Gắn sự kiện điều khiển cho toàn bộ UI
         initController();
+    }
+     // update uc3
+    // NEW: Constructor bổ sung hỗ trợ truyền đề bài có sẵn (Dùng cho Mode 2 người chơi chung đề)
+    public SudokuController(SudokuFrame view, int[][] sharedBoard, int[][] sharedSolution) {
+        this(view);
+        setupSharedGame(sharedBoard, sharedSolution);
+    }
+
+    // NEW: Hàm thiết lập màn chơi khi được chia sẻ chung đề bài từ bên ngoài
+    public void setupSharedGame(int[][] sharedBoard, int[][] sharedSolution) {
+        engine.stop();
+        currentMatrix = new int[9][9];
+        for (int i = 0; i < 9; i++) {
+            System.arraycopy(sharedBoard[i], 0, currentMatrix[i], 0, 9);
+        }
+        undoStack.clear();
+        redoStack.clear();
+
+        engine.setSolution(sharedSolution);
+        view.setBoardData(currentMatrix);
+
+        hintCount = 0;
+        view.updateHintUI(MAX_HINT, MAX_HINT);
+        engine.setOnGenerationEvolved(null);
+
+        gameController.startGame();
+        view.updateMistakeUI(0, gameController.getMaxMistakes());
+        view.getBtnPause().setEnabled(true);
+        view.getBtnPause().setText("Tạm dừng");
+        view.setCellsVisible(true);
+
+        view.updateStatus("Trận đấu đối kháng đã sẵn sàng!");
+        gameTimer.reset();
+        gameTimer.start();
     }
 
     private void initController() {
@@ -59,6 +94,41 @@ public class SudokuController {
                 generateBoardWithDifficulty(missingDigits);
             } else {
                 // 1.3.2: SudokuController nhận kết quả missingDigits == -1 do người chơi đóng hộp thoại (Hủy tạo mới).
+            }
+        });
+
+        // ==========================================================
+        // UC-3.8: Xử lý chức năng Quay lại Menu chính (Đã tách ra độc lập)
+        // ==========================================================
+        view.getBtnBackToMenu().addActionListener(e -> {
+            // Dừng đồng hồ tính giờ hành trình và các luồng giải thuật ngầm
+            gameTimer.stop();
+            engine.stop();
+
+            // Nếu đang ở chế độ 2 người chơi (có đối thủ), tắt luôn cửa sổ của đối thủ
+            if (view.getOpponentFrame() != null) {
+                view.getOpponentFrame().dispose();
+            }
+
+            // Đóng hoàn toàn cửa sổ chơi Sudoku hiện tại
+            view.dispose();
+
+            // Mở lại màn hình Menu chính (MainFrame)
+            java.awt.Window[] windows = java.awt.Window.getWindows();
+            boolean menuFound = false;
+
+            for (java.awt.Window window : windows) {
+                if (window instanceof com.sudoku.view.MainFrame) {
+                    window.setVisible(true); // Hiển thị lại Menu cũ nếu nó đang ẩn
+                    menuFound = true;
+                    break;
+                }
+            }
+
+            // Nếu không tìm thấy Menu cũ, khởi tạo một Menu mới hoàn toàn
+            if (!menuFound) {
+                com.sudoku.view.MainFrame mainMenu = new com.sudoku.view.MainFrame();
+                mainMenu.setVisible(true);
             }
         });
 
@@ -125,7 +195,7 @@ public class SudokuController {
         // UR-5.2 & UR-5.3: Xử lý chức năng Tạm dừng / Tiếp tục game
         // ==========================================================
         view.getBtnPause().addActionListener(e -> {
-            if (gameController.isGameOver()) return;
+            if (gameController.isGameOver() || view.isGameOver()) return;
 
             if (gameController.isPaused()) {
                 gameController.resumeGame();
@@ -323,7 +393,7 @@ public class SudokuController {
     }
 
     private void handleUserInput(int row, int col) {
-        if (!gameController.isPlaying()) return;
+        if (!gameController.isPlaying() || view.isGameOver()) return;
 
         int[][] boardData = view.getBoardData();
         int value = boardData[row][col];
@@ -344,7 +414,7 @@ public class SudokuController {
 
                 if (gameController.isGameLost()) {
                     gameController.setLost();
-                    triggerGameOver(false);
+                    triggerGameOver(false); // Xử lý thua cuộc
                 }
             }
         } else {
@@ -363,28 +433,43 @@ public class SudokuController {
             }
         }
         gameController.setWon();
-        triggerGameOver(true);
+        triggerGameOver(true); // Xử lý thắng cuộc
     }
 
+    // update UC3 sửa lại điều kiện win game khi thi đấu đối kháng
+    // NÂNG CẤP: Đồng bộ hóa trạng thái kết thúc trận đấu (Single & Multiplayer)
     private void triggerGameOver(boolean won) {
         gameTimer.stop();
         String time = gameTimer.getTimeString();
 
-        for (int i = 0; i < 9; i++)
-            for (int j = 0; j < 9; j++)
+        // Khóa không cho sửa ô lưới nữa
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 view.getCell(i, j).setEditable(false);
+            }
+        }
 
-        view.getBtnPause().setEnabled(false);
-
-        if (won) {
-            JOptionPane.showMessageDialog(view,
-                    "🎉 CHÚC MỪNG! Bạn đã hoàn thành xuất sắc bản Sudoku này!\n" + time,
-                    "CHIẾN THẮNG", JOptionPane.INFORMATION_MESSAGE);
+        // Kiểm tra xem đây là trận 1 người chơi hay 2 người chơi đấu đối kháng
+        if (view.getOpponentFrame() != null) {
+            // MODE 2 NGƯỜI CHƠI: Gọi hàm kết thúc phối hợp chéo giữa 2 màn hình
+            if (won) {
+                view.endGame(true, "hoàn thành xuất sắc bàn cờ Sudoku trước!");
+            } else {
+                view.endGame(false, "phạm quá số lượng lỗi quy định (3/3)!");
+            }
         } else {
-            JOptionPane.showMessageDialog(view,
-                    "💀 GAME OVER! Bạn đã phạm quá " + gameController.getMaxMistakes() + " lỗi quy định.\n" + time,
-                    "THUA CUỘC", JOptionPane.ERROR_MESSAGE);
-            view.getBtnGenerate().doClick(); // Tự động Reset tạo màn chơi mới
+            // MODE 1 NGƯỜI CHƠI TRUYỀN THỐNG: Giữ nguyên Pop-up cũ của bạn
+            view.getBtnPause().setEnabled(false);
+            if (won) {
+                JOptionPane.showMessageDialog(view,
+                        "🎉 CHÚC MỪNG! Bạn đã hoàn thành xuất sắc bản Sudoku này!\n" + time,
+                        "CHIẾN THẮNG", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(view,
+                        "💀 GAME OVER! Bạn đã phạm quá " + gameController.getMaxMistakes() + " lỗi quy định.\n" + time,
+                        "THUA CUỘC", JOptionPane.ERROR_MESSAGE);
+                view.getBtnGenerate().doClick();
+            }
         }
     }
 
@@ -440,7 +525,7 @@ public class SudokuController {
     }
 
     private void undoMove() {
-        if (undoStack.isEmpty()) {
+        if (undoStack.isEmpty() || view.isGameOver()) {
             view.updateStatus("Không có thao tác nào để hoàn tác!");
             return;
         }
@@ -472,7 +557,7 @@ public class SudokuController {
     }
 
     private void redoMove() {
-        if (redoStack.isEmpty()) {
+        if (redoStack.isEmpty() || view.isGameOver()) {
             view.updateStatus("Không có thao tác nào để làm lại!");
             return;
         }
@@ -489,4 +574,8 @@ public class SudokuController {
 
         view.updateStatus("Đã thực hiện lại (Redo) hành động.");
     }
+
+    // Getter phục vụ cho việc đồng bộ và lấy dữ liệu đề bài
+    public int[][] getCurrentMatrix() { return this.currentMatrix; }
+    public int[][] getSolution() { return this.engine.getSolution(); }
 }
