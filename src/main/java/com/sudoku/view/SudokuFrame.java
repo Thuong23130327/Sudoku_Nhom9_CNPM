@@ -221,7 +221,7 @@ public class SudokuFrame extends JFrame {
     // HÀM TẠO GIAO DIỆN BÀN PHÍM ẢO
     private JPanel createVirtualKeyboard() {
         // Sử dụng BorderLayout để chia khu vực: phần Lưới số ở trên, nút Xóa ở dưới
-        JPanel pnlKeyboard = new JPanel(new BorderLayout(10, 10)); // Khoảng cách 10px giữa các phần
+        JPanel pnlKeyboard = new JPanel(new BorderLayout(10, 10)); 
 
         // Trang trí viền bao quanh bàn phím
         pnlKeyboard.setBorder(BorderFactory.createCompoundBorder(
@@ -238,7 +238,7 @@ public class SudokuFrame extends JFrame {
         // Fix kích thước để bàn phím không bị méo khi kéo giãn cửa sổ
         pnlKeyboard.setPreferredSize(new Dimension(280, 350));
 
-        Font btnFont = new Font("Segoe UI", Font.BOLD, 26); // Font chữ hiện đại
+        Font btnFont = new Font("Segoe UI", Font.BOLD, 26);
 
         // 1. TẠO LƯỚI 3x3 CHỨA CÁC SỐ TỪ 1 ĐẾN 9
         JPanel pnlNumbers = new JPanel(new GridLayout(3, 3, 10, 10));
@@ -249,17 +249,14 @@ public class SudokuFrame extends JFrame {
         }
 
         // 2. TẠO NÚT XÓA CHIẾM FULL CHIỀU NGANG
-        btnNumbers[0] = new JButton("Xóa"); // Thêm chữ Xóa cho nút dài nhìn cân đối hơn
+        btnNumbers[0] = new JButton("Xóa");
         styleVirtualButton(btnNumbers[0], btnFont, new Color(255, 220, 220), new Color(200, 0, 0));
 
-        // Cố định chiều cao cho nút Xóa để nó vuông vắn với lưới số ở trên (ví dụ: 65px)
         btnNumbers[0].setPreferredSize(new Dimension(0, 65));
 
         // 3. RÁP CÁC THÀNH PHẦN VÀO PANEL CHÍNH
         pnlKeyboard.add(pnlNumbers, BorderLayout.CENTER);
         pnlKeyboard.add(btnNumbers[0], BorderLayout.SOUTH);
-
-        // Bọc thêm 1 panel trống bên ngoài để bàn phím luôn bám lên phía trên (chống bị giãn dài theo chiều dọc màn hình)
         JPanel pnlOuter = new JPanel(new BorderLayout());
         pnlOuter.add(pnlKeyboard, BorderLayout.NORTH);
 
