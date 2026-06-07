@@ -436,5 +436,57 @@ public class SudokuController {
         // UR-5.1: Reset timer và bắt đầu đếm
         // 1.1.19: SudokuController gọi hàm reset() và start() của đối tượng TimerUtils.
         gameTimer.reset();
-        gameTimer.start();    }
+        gameTimer.start();
+    }
+
+    private void undoMove() {
+        if (undoStack.isEmpty()) {
+            view.updateStatus("Không có thao tác nào để hoàn tác!");
+            return;
+        }
+
+        Move move = undoStack.pop();
+        redoStack.push(move);
+
+        view.setCellValue(move.getRow(), move.getCol(), move.getOldValue());
+        previousValues[move.getRow()][move.getCol()] = move.getOldValue();
+
+        int[][] solution = engine.getSolution();
+        if (move.getOldValue() == 0 || (solution != null && move.getOldValue() == solution[move.getRow()][move.getCol()])) {
+            gameController.recordMistake(move.getRow(), move.getCol(), 0);
+        } else if (solution != null && move.getOldValue() != solution[move.getRow()][move.getCol()]) {
+            gameController.recordMistake(move.getRow(), move.getCol(), move.getOldValue());
+        }
+
+        mistakeCount = gameController.getMistakeCount();
+        view.updateMistakeUI(mistakeCount, gameController.getMaxMistakes());
+        view.highlightSameNumbers();
+
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                view.highlightErrorCell(r, c, false);
+            }
+        }
+        checkBoardErrors();
+        view.updateStatus("Đã hoàn tác bước đi vừa thực hiện.");
+    }
+
+    private void redoMove() {
+        if (redoStack.isEmpty()) {
+            view.updateStatus("Không có thao tác nào để làm lại!");
+            return;
+        }
+
+        Move move = redoStack.pop();
+        undoStack.push(move);
+
+        view.setCellValue(move.getRow(), move.getCol(), move.getNewValue());
+        previousValues[move.getRow()][move.getCol()] = move.getNewValue();
+
+        view.highlightSameNumbers();
+        checkBoardErrors();
+        handleUserInput(move.getRow(), move.getCol());
+
+        view.updateStatus("Đã thực hiện lại (Redo) hành động.");
+    }
 }
