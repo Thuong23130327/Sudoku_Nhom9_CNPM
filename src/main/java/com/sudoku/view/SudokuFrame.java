@@ -489,9 +489,11 @@ public class SudokuFrame extends JFrame {
     private Color getBaseColor(int r, int c, boolean isEditable) {
         boolean isDarkBlock = ((r / 3) + (c / 3)) % 2 != 0;
         if (isEditable) {
-            return isDarkBlock ? new Color(245, 245, 245) : Color.WHITE;
+            // Ô người chơi nhập: Block sáng là Trắng, Block tối là Xanh dương nhạt rõ rệt
+            return isDarkBlock ? new Color(220, 235, 255) : Color.WHITE;
         } else {
-            return isDarkBlock ? new Color(215, 215, 215) : new Color(230, 230, 230);
+            // Ô đề bài (Read-only): Block sáng là Xám, Block tối là Xám xanh đậm hơn
+            return isDarkBlock ? new Color(200, 215, 235) : new Color(230, 230, 230);
         }
     }
 
