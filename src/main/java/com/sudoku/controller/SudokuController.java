@@ -5,6 +5,7 @@ import com.sudoku.model.SudokuGenerator;
 import com.sudoku.model.SudokuLogic;
 import com.sudoku.utils.TimerUtils;
 import com.sudoku.view.SudokuFrame;
+import com.sudoku.view.WelcomeDialog;
 
 import javax.swing.*;
 
@@ -22,8 +23,6 @@ public class SudokuController {
     private int mistakeCount = 0;
     private final int MAX_MISTAKES = 3;
     private GameController gameController; // UR-5: Quản lý trạng thái tập trung
-
-
 
     private int hintCount = 0;
     private final int MAX_HINT = 3;
@@ -47,62 +46,41 @@ public class SudokuController {
     private void initController() {
         // ==========================================================
         // UR-1.1: Xử lý nút "Tạo Mới" (Generate Game)
+        // 1.1.1: Người chơi thực hiện hành động click() vào JButton btnGenerate trên giao diện.
         // ==========================================================
         view.getBtnGenerate().addActionListener(e -> {
-            engine.stop();
-
-            int[][] newBoard = generator.generate(40);
-            currentMatrix = new int[9][9];
-            for (int i = 0; i < 9; i++)
-                System.arraycopy(newBoard[i], 0, currentMatrix[i], 0, 9);
-
-            // Nạp ngay solution chuẩn vào engine từ đầu để tránh lỗi tô đỏ toàn bảng khi tiếp tục
-            engine.setSolution(generator.getSolution());
-
-            view.setBoardData(currentMatrix);
-            hintCount = 0;
-            view.updateHintUI(MAX_HINT, MAX_HINT);
-            engine.setOnGenerationEvolved(null);
-
-            // UR-5.1 + UR-5.4: Reset trạng thái game và số lỗi cho ván mới
-            gameController.startGame();
-            view.updateMistakeUI(0, gameController.getMaxMistakes());
-            view.updateStatus("Ván mới bắt đầu!");
-
-            // THÊM: Mở lại các nút phòng trường hợp ván trước đang pause/gameover
-            view.getBtnPause().setEnabled(true);
-            view.getBtnPause().setText("Tạm dừng");
-            view.setCellsVisible(true);
-
-            new SwingWorker<Void, Void>() {
-                @Override
-                protected Void doInBackground() {
-                    engine.solve(currentMatrix);
-                    return null;
-                }
-
-                @Override
-                protected void done() {
-                    view.updateStatus("Ván chơi đã sẵn sàng!");
-                }
-            }.execute();
-
-            // UR-5.1: Reset timer và bắt đầu đếm
-            gameTimer.reset();
-            gameTimer.start();
+            // 1.1.2: SudokuFrame (View) gọi hàm actionPerformed(ActionEvent e) gửi sự kiện đến SudokuController.
+            WelcomeDialog dialog = new WelcomeDialog(view);
+            // 1.1.3: SudokuController khởi tạo và gọi hàm setVisible(true) để hiển thị WelcomeDialog.
+            dialog.setVisible(true);
+            // 1.1.7: SudokuController gọi hàm getSelectedMissingDigits() từ WelcomeDialog để lấy tham số missingDigits.
+            int missingDigits = dialog.getSelectedMissingDigits();
+            if (missingDigits != -1) {
+                // 1.1.8: SudokuController tự gọi hàm tổng hợp generateBoardWithDifficulty(missingDigits).
+                generateBoardWithDifficulty(missingDigits);
+            } else {
+                // 1.3.2: SudokuController nhận kết quả missingDigits == -1 do người chơi đóng hộp thoại (Hủy tạo mới).
+            }
         });
 
         // ==========================================================
         // UR-1.2: Xử lý nút "Làm Mới" (Reset Game)
+        // 1.2.0: Tiền điều kiện (Current State): Bàn cờ đang hiển thị và biến currentMatrix khác null (Ván đấu đang diễn ra, người chơi đã điền một số ô).
+        // 1.2.1: Người chơi thực hiện hành động click() vào JButton btnReset.
         // ==========================================================
         view.getBtnReset().addActionListener(e -> {
-
+            // 1.2.2: SudokuFrame (View) gọi hàm actionPerformed(ActionEvent e) gửi sự kiện đến SudokuController.
+            // 1.2.3: SudokuController xử lý lệnh kiểm tra điều kiện if (currentMatrix != null).
             if (currentMatrix != null) {
                 // Đưa mảng gốc vào lại, hàm setBoardData sẽ đè lại giao diện,
                 // tự động xóa các ô người chơi đã nhập và giữ nguyên ô đề bài
+                // 1.2.4: Điều kiện đúng, SudokuController gọi hàm setBoardData(currentMatrix) của SudokuFrame.
                 view.setBoardData(currentMatrix);
+                // 1.2.6: SudokuController gọi hàm updateStatus(msg) của SudokuFrame.
                 view.updateStatus("Đã làm mới ván chơi về trạng thái ban đầu!");
             } else {
+                // 1.4.1: SudokuController nhận kết quả currentMatrix == null (Chưa khởi tạo ván đấu).
+                // 1.4.2: SudokuController gọi hàm updateStatus("Chưa có ván đấu nào để làm mới!") của SudokuFrame để báo lỗi.
                 view.updateStatus("Chưa có ván đấu nào để làm mới!");
             }
         });
@@ -534,5 +512,56 @@ public class SudokuController {
             // Tự động tạo ván mới
             view.getBtnGenerate().doClick();
         }
+    }
+
+    public void generateBoardWithDifficulty(int missingDigits) {
+        // 1.1.9: SudokuController gọi hàm stop() của SudokuEngine.
+        engine.stop();
+
+        // 1.1.10: SudokuController gọi hàm generate(missingDigits) của SudokuGenerator (Model).
+        int[][] newBoard = generator.generate(missingDigits);
+        currentMatrix = new int[9][9];
+        for (int i = 0; i < 9; i++)
+            System.arraycopy(newBoard[i], 0, currentMatrix[i], 0, 9);
+
+        // Nạp ngay solution chuẩn vào engine từ đầu để tránh lỗi tô đỏ toàn bảng khi tiếp tục
+        // 1.1.14: SudokuController gọi hàm getSolution() từ SudokuGenerator để lấy đáp án chuẩn.
+        // 1.1.15: SudokuController gọi hàm setSolution(solution) truyền đáp án vào SudokuEngine.
+        engine.setSolution(generator.getSolution());
+
+        // 1.1.16: SudokuController gọi hàm setBoardData(currentMatrix) của SudokuFrame.
+        view.setBoardData(currentMatrix);
+        hintCount = 0;
+        view.updateHintUI(MAX_HINT, MAX_HINT);
+        engine.setOnGenerationEvolved(null);
+
+        // UR-5.1 + UR-5.4: Reset trạng thái game và số lỗi cho ván mới
+        gameController.startGame();
+        // 1.1.18: SudokuController gọi hàm updateMistakeUI(0, maxMistakes) và updateStatus(msg) của SudokuFrame.
+        view.updateMistakeUI(0, gameController.getMaxMistakes());
+        view.updateStatus("Ván mới bắt đầu!");
+
+        // THÊM: Mở lại các nút phòng trường hợp ván trước đang pause/gameover
+        view.getBtnPause().setEnabled(true);
+        view.getBtnPause().setText("Tạm dừng");
+        view.setCellsVisible(true);
+
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                engine.solve(currentMatrix);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                view.updateStatus("Ván chơi đã sẵn sàng!");
+            }
+        }.execute();
+
+        // UR-5.1: Reset timer và bắt đầu đếm
+        // 1.1.19: SudokuController gọi hàm reset() và start() của đối tượng TimerUtils.
+        gameTimer.reset();
+        gameTimer.start();
     }
 }

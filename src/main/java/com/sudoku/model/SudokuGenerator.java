@@ -23,6 +23,7 @@ public class SudokuGenerator {
 
         // Bước 2: Thực hiện các phép biến đổi ngẫu nhiên (Shuffle)
         // Các phép này thay đổi vị trí số nhưng KHÔNG phá vỡ luật Sudoku
+        // 1.1.11: SudokuGenerator thực thi chuỗi hàm nội bộ: shuffleRows(), shuffleCols(), shuffleGroupRows(), shuffleGroupCols().
         shuffleRows();          // Trộn các hàng trong cùng một nhóm
         shuffleCols();          // Trộn các cột trong cùng một nhóm
         shuffleGroupRows();     // Trộn các nhóm hàng lớn (Band)
@@ -34,9 +35,11 @@ public class SudokuGenerator {
         }
 
         // LƯU ĐÁP ÁN HOÀN CHỈNH TRƯỚC KHI XÓA Ô 
+        // 1.1.12: SudokuGenerator tự gọi hàm copyBoard(board) để lưu lại mảng đáp án.
         solution = copyBoard(board);
 
         // Bước 3: Xóa bớt số để tạo thành đề bài
+        // 1.1.13: SudokuGenerator tự gọi hàm removeDigits(missingDigits) đục lỗ đề bài và trả mảng về cho Controller.
         removeDigits(missingDigits);
 
         return board;
@@ -183,20 +186,13 @@ public class SudokuGenerator {
     }
 
     private void removeDigits(int count) {
-
         int temp = count;
-
         while (temp > 0) {
-
             int cellId = random.nextInt(81);
-
             int i = (cellId / 9);
             int j = cellId % 9;
-
             if (board[i][j] != 0) {
-
                 board[i][j] = 0;
-
                 temp--;
             }
         }

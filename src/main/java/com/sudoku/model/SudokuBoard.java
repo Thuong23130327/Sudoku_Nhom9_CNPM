@@ -2,13 +2,13 @@ package com.sudoku.model;
 
 /**
  * [MODEL] Cấu trúc dữ liệu dùng chung cho toàn dự án.
- * Thống nhất đánh số theo dải UR-1.x, 2.x, 3.x
+ * Ánh xạ luồng sự kiện: 3.2.4, 4.1
  */
 public class SudokuBoard {
-    // Ma trận 9x9 chứa trạng thái hiện tại người chơi đang nhập [UR-2.2]
+    // Ma trận 9x9 chứa trạng thái hiện tại người chơi đang nhập
     private int[][] currentMatrix;
     
-    // Ma trận 9x9 chứa đề bài gốc (để không cho phép xóa/sửa) [UR-2.4]
+    // Ma trận 9x9 chứa đề bài gốc (không cho phép xóa/sửa)
     private boolean[][] isFixed;
     
     // Ma trận 9x9 chứa đáp án hoàn chỉnh (dùng cho Hint và Check Win) [3.2.4, 4.1]
@@ -26,13 +26,15 @@ public class SudokuBoard {
         return currentMatrix[row][col];
     }
 
+    // Cập nhật giá trị vào ma trận bàn cờ hiện tại
     public void setValueAt(int row, int col, int value) {
-        // Chỉ cho phép sửa nếu ô đó không phải là số mặc định của đề bài
+        // Kiểm tra trạng thái thấy ô hiện tại là ô gốc (Read-Only), từ chối thực hiện lệnh cập nhật
         if (!isFixed[row][col]) {
             currentMatrix[row][col] = value;
         }
     }
 
+    // Kiểm tra xem ô được chọn có phải là ô đề bài gốc không
     public boolean isFixedCell(int row, int col) {
         return isFixed[row][col];
     }
